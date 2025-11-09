@@ -22,17 +22,8 @@ const Navbar = () => {
                 <NavLink to="/">Home</NavLink>
             </li>
             <li>
-                <NavLink to="/allProducts">All Products</NavLink>
-            </li>
-            <li>
-                <NavLink to="/myProducts">My Products</NavLink>
-            </li>
-            <li>
-                <NavLink to="/myBids">My Food</NavLink>
-            </li>
-            <li>
-                <NavLink to="/createProducts">Create Food</NavLink>
-            </li>
+                <NavLink to="/availableFoods">Available Foods</NavLink>
+            </li>    
         </>
     );
 
@@ -67,22 +58,46 @@ const Navbar = () => {
                     {loading ? (
                         <span className="loading loading-spinner loading-sm"></span>
                     ) : user ? (
-                        <button
-                            onClick={handleLogout}
-                            className="btn bg-linear-to-r from-[#632EE3] to-[#9F62F2] px-7 text-white border-none hover:opacity-90 transition-all"> Logout </button>) :
+
+                        <div className="dropdown dropdown-end">
+                            <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar">
+                                <div className="w-10 rounded-full">
+                                    <img
+                                        alt="Tailwind CSS Navbar component"
+                                        src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" />
+                                </div>
+                            </div>
+                            <ul
+                                tabIndex="-1"
+                                className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow">
+                                <li>
+                                    <Link to="/addFood" className="justify-between">
+                                        Add Food
+                                    </Link>
+                                </li>
+                                <li>
+                                    <Link to="/manageMyFoods" className="justify-between">
+                                        Manage My Foods
+                                    </Link>
+                                </li>
+                                <li>
+                                    <Link to="/myFoodRequests" className="justify-between">
+                                        My Food Requests
+                                    </Link>
+                                </li>
+
+                                <li><Link to="/login" onClick={handleLogout}>Logout</Link></li>
+                            </ul>
+                        </div>
+
+
+                    ) :
                         (<>
                             <Link
                                 to="/login"
                                 className="btn bg-transparent text-[#632EE3] border-2 border-[#9F62F2] hover:text-white hover:bg-linear-to-r hover:from-[#632EE3] hover:to-[#9F62F2] px-7 transition-all"
                             >
                                 Login
-                            </Link>
-
-                            <Link
-                                to="/register"
-                                className="btn bg-linear-to-r from-[#632EE3] to-[#9F62F2] px-7 text-white border-none hover:opacity-90 transition-all"
-                            >
-                                Register
                             </Link>
                         </>)}
                 </div>
