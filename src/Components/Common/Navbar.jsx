@@ -2,6 +2,7 @@
 import React, { useContext } from 'react';
 import { Link, NavLink, useNavigate } from 'react-router';
 import { AuthContext } from '../../Contexts/AuthContext';
+import NavbarButton from '../Buttons/NavbarButton';
 
 const Navbar = () => {
     const { user, signOutUser, loading } = useContext(AuthContext);
@@ -23,16 +24,16 @@ const Navbar = () => {
             </li>
             <li>
                 <NavLink to="/availableFoods">Available Foods</NavLink>
-            </li>    
+            </li>
         </>
     );
 
     return (
         <div>
-            <div className="navbar bg-base-100 shadow-sm px-10">
+            <div className="navbar bg-[#75805c] shadow-sm px-25 ">
                 <div className="navbar-start">
                     <div className="dropdown">
-                        <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden">
+                        <div tabIndex={0} role="button" className=" mr-3 text-white lg:hidden">
                             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h8m-8 6h16" />
                             </svg>
@@ -44,12 +45,11 @@ const Navbar = () => {
                             {links}
                         </ul>
                     </div>
-                    <a className="btn btn-ghost text-3xl font-bold">
-                        Food <span className="bg-linear-to-r from-[#632EE3] to-[#9F62F2] bg-clip-text text-transparent">Cycle</span>
+                    <a href="/" className="font-[fredoka] text-white text-3xl font-semibold ">FoodCycle
                     </a>
                 </div>
 
-                <div className="navbar-center hidden lg:flex text-base font-semibold">
+                <div className="navbar-center hidden lg:flex text-white text-base font-semibold">
                     <ul className="menu menu-horizontal px-1">{links}</ul>
                 </div>
 
@@ -69,7 +69,7 @@ const Navbar = () => {
                             </div>
                             <ul
                                 tabIndex="-1"
-                                className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow">
+                                className="menu menu-sm dropdown-content font-semibold bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow">
                                 <li>
                                     <Link to="/addFood" className="justify-between">
                                         Add Food
@@ -93,12 +93,11 @@ const Navbar = () => {
 
                     ) :
                         (<>
-                            <Link
-                                to="/login"
-                                className="btn bg-transparent text-[#632EE3] border-2 border-[#9F62F2] hover:text-white hover:bg-linear-to-r hover:from-[#632EE3] hover:to-[#9F62F2] px-7 transition-all"
-                            >
-                                Login
+
+                            <Link to="/login">
+                                <NavbarButton />
                             </Link>
+
                         </>)}
                 </div>
             </div>

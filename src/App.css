@@ -5,6 +5,17 @@
 @plugin "daisyui/theme" {
   name: "light";
   default: true;
-  --color-primary: blue;
-  --color-secondary: teal;
+  /* --color-primary: #FF7E47;
+  --color-secondary: #4CAF50; */
+
+  --color-primary: "#FF7E47";   /* Warm orange */
+      --color-secondary: "#4CAF50"; /* Fresh green */
+      --color-accent: "#D89B76";   /* Soft orange accent */
+      --color-neutral: "#3C2F2F";   /* Text / dark brown */
+      --color-base-100: "#F6E9D8";  /* Background */
+      --color-base-200: "#FBF5ED";  /* Card background */
+      --color-base-300: "#CBB7A2";  /* Borders / outlines */
+      --color-info: "#8C9A6D";    /* Olive (sidebar) */
+      --color-success: "#A47C59";   /* Deep clay brown */
 }
+
