@@ -40,7 +40,7 @@ const Navbar = () => {
                         </div>
                         <ul
                             tabIndex="-1"
-                            className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow text-base font-semibold"
+                            className="menu menu-sm dropdown-content bg-[#575f43] text-white rounded-box z-1 mt-3 w-52 p-2 shadow text-base font-semibold"
                         >
                             {links}
                         </ul>
@@ -60,7 +60,7 @@ const Navbar = () => {
                     ) : user ? (
 
                         <div className="dropdown dropdown-end">
-                            <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar">
+                            <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar border-2 border-base-100">
                                 <div className="w-10 rounded-full">
                                     <img
                                         alt="Tailwind CSS Navbar component"
@@ -69,7 +69,7 @@ const Navbar = () => {
                             </div>
                             <ul
                                 tabIndex="-1"
-                                className="menu menu-sm dropdown-content font-semibold bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow">
+                                className="menu menu-sm dropdown-content font-semibold bg-[#575f43] text-white rounded-box z-1 mt-3 w-52 p-2 shadow">
                                 <li>
                                     <Link to="/addFood" className="justify-between">
                                         Add Food

@@ -42,15 +42,17 @@ const Register = () => {
     };
 
     return (
-        <div className="hero bg-base-200 min-h-screen">
+        <div className="hero bg-base-100 min-h-screen">
             <div className="hero-content flex-col lg:flex-row-reverse">
-
-                <div className="card bg-base-100 w-full shrink-0 shadow-2xl px-5 py-10 m-20">
+                <div className="card bg-base-200 w-full shrink-0 shadow-2xl px-5 py-10 m-20 rounded-4xl">
                     <div className="card-body">
                         <div className="text-center">
-                            <h1 className="text-4xl font-bold">Register Now!</h1>
-                            <p className="py-3 font-semibold">
-                                Already have an account? <a href="/login" className=" bg-linear-to-r from-[#632EE3] to-[#9F62F2] bg-clip-text text-transparent font-bold hover:underline">Login Now</a>
+                            <h1 className="text-4xl text-success font-black">Register Now!</h1>
+                            <p className="py-3 text-success font-semibold">
+                                Don't have an account?{' '}
+                                <a href="/login" className="text-lime-700 font-black hover:underline">
+                                    Login Now
+                                </a>
                             </p>
                         </div>
 
@@ -64,7 +66,7 @@ const Register = () => {
                         <form onSubmit={handleRegister}>
                             <fieldset className="fieldset">
                                 {/* Name */}
-                                <label className="label text-base font-semibold text-[#001931]">Name</label>
+                                <label className="label text-base font-semibold text-neutral">Name</label>
                                 <input
                                     type="text"
                                     name='name'
@@ -74,7 +76,7 @@ const Register = () => {
                                 />
 
                                 {/* email */}
-                                <label className="label text-base font-semibold text-[#001931]">Email</label>
+                                <label className="label text-base font-semibold text-neutral">Email</label>
                                 <input
                                     type="email"
                                     name='email'
@@ -84,7 +86,7 @@ const Register = () => {
                                 />
 
                                 {/* image Url */}
-                                <label className="label text-base font-semibold text-[#001931]">Image-URL</label>
+                                <label className="label text-base font-semibold text-neutral">Image-URL</label>
                                 <input
                                     type="text"
                                     name='imgUrl'
@@ -93,7 +95,7 @@ const Register = () => {
                                 />
 
                                 {/* password */}
-                                <label className="label mt-4 text-base font-semibold text-[#001931]">Password</label>
+                                <label className="label mt-4 text-base font-semibold text-neutral">Password</label>
                                 <input
                                     type="password"
                                     name='password'
@@ -106,7 +108,7 @@ const Register = () => {
                                 <button
                                     type="submit"
                                     disabled={loading}
-                                    className="btn bg-linear-to-r from-[#632EE3] to-[#9F62F2] px-7 text-white border-none hover:opacity-90 transition-all mt-4 text-base"
+                                    className="btn bg-success px-7 text-white border-none hover:opacity-90 transition-all mt-4 text-base"
                                 >
                                     {loading ? 'Registering...' : 'Register '}
                                 </button>
@@ -120,9 +122,9 @@ const Register = () => {
                                     type="button"
                                     onClick={handleGoogle}
                                     disabled={loading}
-                                    className="btn btn-outline px-7 hover:bg-linear-to-r from-[#632EE3] to-[#9F62F2] border-[#632EE3] font-semibold text-[#632EE3] hover:text-white transition-all text-base"
+                                    className="btn btn-outline px-7 hover:bg-[#75805c] border-[#75805c] font-bold text-[#575f43] hover:text-white transition-all text-base"
                                 >
-                                    <FaGoogle size={20} className="mr-2" />
+                                    <FaGoogle size={20} className="mr-1" />
                                     Sign In with Google
                                 </button>
                             </fieldset>
