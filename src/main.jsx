@@ -8,12 +8,13 @@ import { createBrowserRouter, RouterProvider } from 'react-router';
 import AuthProvider from './Contexts/AuthProvider.jsx';
 import Login from './Components/LoginRegister/Login.jsx';
 import Register from './Components/LoginRegister/Register.jsx';
-import Home from './Components/Home.jsx';
 import AvaiableFoods from './Components/AvaiableFoods.jsx';
 import AddFoods from './Components/AddFoods.jsx';
 import ManageMyFoods from './Components/ManageMyFoods.jsx';
 import MyFoodRequests from './Components/MyFoodRequests.jsx';
 import PrivateRoute from './Components/LoginRegister/PrivateRoute.jsx';
+import Home from './Components/HomePage/Home.jsx';
+import FoodDetails from './Components/FoodDetails.jsx';
 
 
 const router = createBrowserRouter([
@@ -40,6 +41,10 @@ const router = createBrowserRouter([
       {
         path: "myFoodRequests",
         element: <PrivateRoute><MyFoodRequests /></PrivateRoute>
+      },
+      {
+        path: "foodDetails/:id",
+        element: <PrivateRoute><FoodDetails /></PrivateRoute>
       },
       {
         path: "login",
