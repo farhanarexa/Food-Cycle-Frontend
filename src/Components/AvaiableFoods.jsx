@@ -72,7 +72,7 @@ const AvaiableFoods = () => {
                                 </div>
                                 <div className="flex items-center justify-center gap-1 font-bold">
                                     <MdFoodBank size={18} />
-                                    <p>{food.food_quantity}</p>
+                                    <p>{food.food_quantity} Servings Available</p>
                                 </div>
                                 <div className="tooltip mt-2" data-tip={food.expire_date}>
                                     <div>
