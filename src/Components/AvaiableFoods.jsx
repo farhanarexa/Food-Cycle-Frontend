@@ -26,7 +26,7 @@ const AvaiableFoods = () => {
 
     return (
         <div className="px-4 sm:px-6 md:px-8 lg:px-16 xl:px-25 mx-auto">
-            <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-success text-center mt-8 sm:mt-10">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-success text-center bg-accent/20 p-4 rounded-2xl mt-10 mb-4">
                 Available Foods
             </h1>
             <p className="text-center text-sm sm:text-base md:text-xl text-[#575f43] mx-auto mb-8 sm:mb-10 mt-4 sm:mt-5 leading-relaxed">
@@ -37,13 +37,13 @@ const AvaiableFoods = () => {
                 {foods.map((food) => (
                     <div
                         key={food._id}
-                        className="bg-base-200 rounded-2xl shadow-lg shadow-base-300 overflow-hidden border-10 border-base-300 transition-all duration-300 hover:shadow-xl w-full max-w-sm"
+                        className="bg-base-200 rounded-2xl shadow-lg shadow-base-300 overflow-hidden border-10 border-base-300 transition-all duration-300 hover:shadow-2xl hover:-translate-y-3 w-full max-w-sm group"
                     >
-                        <div className="h-50 sm:h-56 md:h-64 lg:h-70 px-2 sm:px-3 py-2 sm:py-3">
+                        <div className="h-50 w-full sm:h-56 md:h-64 lg:h-70 px-2 sm:px-3 py-2 sm:py-3">
                             <img
                                 src={food.food_image}
                                 alt={food.food_name}
-                                className="w-full h-full rounded-xl object-cover"
+                                className="w-full h-full rounded-xl object-cover border-4 border-base-300 group-hover:scale-105 transition-transform duration-500"
                             />
                         </div>
 
