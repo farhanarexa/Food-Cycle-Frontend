@@ -104,7 +104,7 @@ const ManageMyFoods = () => {
 
         if (result.isConfirmed) {
             try {
-                await axios.delete(`http://localhost:3000/my-foods/${foodId}`);
+                await axios.delete(`http://localhost:3000/foods/${foodId}`);
 
 
                 setFoods(foods.filter(food => food._id !== foodId));
