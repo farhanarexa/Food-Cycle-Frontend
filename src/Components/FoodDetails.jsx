@@ -12,10 +12,10 @@ const FoodDetails = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        // Check if user is logged in
+        
         if (!loading) {
-            if (!user || !user.email) { // Check if user exists and has an email
-                navigate('/login'); // Redirect to login if not logged in
+            if (!user || !user.email) { 
+                navigate('/login'); 
             } else {
                 fetchFoodDetails();
             }
@@ -41,46 +41,75 @@ const FoodDetails = () => {
                 icon: 'warning',
                 confirmButtonText: 'OK'
             });
-            navigate('/login'); // Redirect to login if not logged in
+            navigate('/login'); 
             return;
         }
 
-        try {
-            // Show confirmation dialog
-            const result = await Swal.fire({
-                title: 'Request this food?',
-                text: `Do you want to request ${food?.food_name}?`,
-                icon: 'question',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Yes, request it!'
-            });
+        
+        const { value: formValues } = await Swal.fire({
+            title: 'Request Food Details',
+            html: `<div class="text-left">
+                    <div class="mb-3">
+                        <label for="writeLocation" class="block text-sm font-medium mb-1">Pickup Location</label>
+                        <input id="writeLocation" class="swal2-input w-full p-2 border rounded" placeholder="Your pickup location" />
+                    </div>
+                    <div class="mb-3">
+                        <label for="whyNeedFood" class="block text-sm font-medium mb-1">Why do you need this food?</label>
+                        <textarea id="whyNeedFood" class="swal2-textarea w-full p-2 border rounded h-20" placeholder="Briefly explain your situation"></textarea>
+                    </div>
+                    <div>
+                        <label for="contactNo" class="block text-sm font-medium mb-1">Contact Number</label>
+                        <input id="contactNo" class="swal2-input w-full p-2 border rounded" placeholder="Your phone number" />
+                    </div>
+                   </div>`,
+            focusConfirm: false,
+            preConfirm: () => {
+                const writeLocation = document.getElementById('writeLocation').value;
+                const whyNeedFood = document.getElementById('whyNeedFood').value;
+                const contactNo = document.getElementById('contactNo').value;
+                
+                if (!writeLocation || !whyNeedFood || !contactNo) {
+                    Swal.showValidationMessage('Please fill in all required fields');
+                    return false;
+                }
+                
+                return { writeLocation, whyNeedFood, contactNo };
+            },
+            showCancelButton: true,
+            confirmButtonText: 'Request Food',
+            cancelButtonText: 'Cancel',
+            customClass: {
+                htmlContainer: 'text-left'
+            }
+        });
 
-            if (result.isConfirmed) {
-                // Make API call to request the food
-                // Note: You'll need to replace this with your actual API endpoint
-                await axios.post(`http://localhost:3000/food-requests`, {
-                    foodId: food._id,
-                    requesterEmail: user.email,
-                    requesterName: user.displayName || user.email.split('@')[0],
-                    foodName: food.food_name,
-                    donatorEmail: food.email
-                });
+        if (formValues) {
+            try {
+                const requestData = {
+                    writeLocation: formValues.writeLocation,
+                    whyNeedFood: formValues.whyNeedFood,
+                    contactNo: formValues.contactNo,
+                    userEmail: user.email,
+                    name: user.displayName || user.email.split('@')[0] || 'Anonymous',
+                    photoURL: user.photoURL || ''
+                };
+
+                
+                await axios.post(`http://localhost:3000/foodRequest/${food._id}`, requestData);
                 
                 Swal.fire(
                     'Requested!',
                     `Your request for ${food?.food_name} has been sent.`,
                     'success'
                 );
+            } catch (error) {
+                console.error('Error requesting food:', error);
+                Swal.fire(
+                    'Error!',
+                    'There was an error processing your request.',
+                    'error'
+                );
             }
-        } catch (error) {
-            console.error('Error requesting food:', error);
-            Swal.fire(
-                'Error!',
-                'There was an error processing your request.',
-                'error'
-            );
         }
     };
 
@@ -181,7 +210,7 @@ const FoodDetails = () => {
                             </div>
                         </div>
 
-                        {/* Additional Notes Section */}
+                        
                         <div className="divider"></div>
                         <div>
                             <h3 className="text-xl font-semibold mb-2">Additional Notes</h3>
@@ -190,7 +219,7 @@ const FoodDetails = () => {
                             </p>
                         </div>
 
-                        {/* Request Food Button */}
+                        
                         <div className="card-actions justify-end mt-6">
                             <button 
                                 className="btn btn-primary"
