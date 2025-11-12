@@ -30,7 +30,7 @@ const Navbar = () => {
 
     return (
         <div>
-            <div className="navbar bg-[#75805c] shadow-sm px-25 ">
+            <div className="navbar bg-[#75805c] shadow-sm px-4 sm:px-6 md:px-8 lg:px-16 xl:px-25">
                 <div className="navbar-start">
                     <div className="dropdown">
                         <div tabIndex={0} role="button" className=" mr-3 text-white lg:hidden">
@@ -45,26 +45,24 @@ const Navbar = () => {
                             {links}
                         </ul>
                     </div>
-                    <a href="/" className="font-[fredoka] text-white text-3xl font-semibold ">FoodCycle
-                    </a>
+                    <a href="/" className="font-[fredoka] text-white text-2xl sm:text-3xl font-semibold">FoodCycle</a>
                 </div>
 
                 <div className="navbar-center hidden lg:flex text-white text-base font-semibold">
                     <ul className="menu menu-horizontal px-1">{links}</ul>
                 </div>
 
-
                 <div className="navbar-end flex gap-2">
                     {loading ? (
                         <span className="loading loading-spinner loading-sm"></span>
                     ) : user ? (
-
                         <div className="dropdown dropdown-end">
                             <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar border-2 border-base-100">
                                 <div className="w-10 rounded-full">
                                     <img
-                                        alt="Tailwind CSS Navbar component"
-                                        src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" />
+                                        alt="User profile"
+                                        src={user.photoURL || "https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"} 
+                                    />
                                 </div>
                             </div>
                             <ul
@@ -85,20 +83,14 @@ const Navbar = () => {
                                         My Food Requests
                                     </Link>
                                 </li>
-
                                 <li><Link to="/login" onClick={handleLogout}>Logout</Link></li>
                             </ul>
                         </div>
-
-
-                    ) :
-                        (<>
-
-                            <Link to="/login">
-                                <NavbarButton />
-                            </Link>
-
-                        </>)}
+                    ) : (
+                        <Link to="/login">
+                            <NavbarButton />
+                        </Link>
+                    )}
                 </div>
             </div>
         </div>
