@@ -10,6 +10,7 @@ const FoodDetails = () => {
     const [food, setFood] = useState(null);
     const [loadingFood, setLoadingFood] = useState(true);
     const [foodRequests, setFoodRequests] = useState([]);
+    const [hasRequested, setHasRequested] = useState(false);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -27,7 +28,7 @@ const FoodDetails = () => {
             const response = await axios.get(`http://localhost:3000/foods/${id}`);
             setFood(response.data);
 
-            if (user && user.email === response.data.email) {
+            if (user) {
                 await fetchFoodRequests(id);
             }
         } catch (error) {
@@ -41,6 +42,11 @@ const FoodDetails = () => {
         try {
             const response = await axios.get(`http://localhost:3000/food-requests-all/${foodId}`);
             setFoodRequests(response.data);
+
+            const alreadyRequested = response.data.some(
+                (req) => req.userEmail === user?.email
+            );
+            setHasRequested(alreadyRequested);
         } catch (error) {
             console.error('Error fetching food requests:', error);
         }
@@ -109,6 +115,8 @@ const FoodDetails = () => {
                     `Your request for ${food?.food_name} has been sent.`,
                     'success'
                 );
+
+                await fetchFoodRequests(food._id);
             } catch (error) {
                 console.error('Error requesting food:', error);
                 Swal.fire(
@@ -119,8 +127,6 @@ const FoodDetails = () => {
             }
         }
     };
-
- 
 
     const handleAcceptRequest = async (requestId) => {
         document.getElementById('food_requests_modal')?.close();
@@ -173,19 +179,15 @@ const FoodDetails = () => {
             confirmButtonText: 'Yes, reject it!',
             cancelButtonText: 'Cancel',
             reverseButtons: true
-
-
         });
 
         if (result.isConfirmed) {
             try {
                 await axios.patch(`http://localhost:3000/foodRequests/${requestId}`, {
                     requestStatus: 'rejected'
-                } );
+                });
 
                 fetchFoodDetails();
-
-
 
                 Swal.fire({
                     title: 'Rejected!',
@@ -203,28 +205,29 @@ const FoodDetails = () => {
         }
     };
 
-
-
     if (loadingFood) {
         return (
-            <div className="min-h-screen bg-base-200 flex items-center justify-center">
-                <span className="loading loading-spinner loading-lg"></span>
+            <div className="min-h-screen bg-gradient-to-br from-green-50 to-emerald-100 flex items-center justify-center">
+                <div className="text-center">
+                    <span className="loading loading-spinner loading-lg text-success"></span>
+                    <p className="mt-4 text-success font-semibold">Loading food details...</p>
+                </div>
             </div>
         );
     }
 
     if (!food) {
         return (
-
-            <div className="min-h-screen bg-base-200 flex items-center justify-center">
-                <div className="text-center">
-                    <h2 className="text-2xl font-bold text-error">Food not found</h2>
+            <div className="min-h-screen bg-gradient-to-br from-green-50 to-emerald-100 flex items-center justify-center">
+                <div className="text-center max-w-md p-8 bg-white rounded-3xl shadow-xl">
+                    <div className="text-6xl mb-4">🍽️</div>
+                    <h2 className="text-2xl font-bold text-error mb-4">Food not found</h2>
+                    <p className="text-gray-600 mb-6">The food item you're looking for doesn't exist or has been removed.</p>
                     <button
-                        className="btn btn-primary mt-4"
+                        className="btn btn-primary bg-success hover:bg-emerald-600 text-white font-semibold px-6 py-3 rounded-xl"
                         onClick={() => navigate(-1)}
                     >
-                        Go Back
-                        
+                        ← Go Back
                     </button>
                 </div>
             </div>
@@ -233,204 +236,211 @@ const FoodDetails = () => {
 
     return (
         <div className="min-h-screen p-4 md:p-8">
-            <div className="container mx-auto max-w-4xl">
-                <button
-                    className="btn btn-info text-white mb-4"
-                    onClick={() => navigate(-1)}
-                >
-                    ← Go Back
-                </button>
+            <div className="container mx-auto max-w-6xl">
+                <div className="flex justify-between items-center mb-6">
+                    <button
+                        className="btn btn-ghost text-success "
+                        onClick={() => navigate(-1)}
+                    >
+                        ← Back to Foods
+                    </button>
+                    <div className="text-sm text-gray-600">
+                        {food.available_status ? (
+                            <span className="badge badge-success text-white px-3 py-2">Available</span>
+                        ) : (
+                            <span className="badge badge-error text-white px-3 py-2">Donated</span>
+                        )}
+                    </div>
+                </div>
 
-                <div className="card bg-base-200 border-5 border-base-300 rounded-4xl shadow-xl">
-                    <figure className="px-4 pt-4">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <div className="rounded-3xl overflow-hidden shadow-2xl">
                         <img
-                            src={food.food_image || 'https://placehold.co/400x300'}
+                            src={food.food_image || 'https://placehold.co/600x400'}
                             alt={food.food_name}
-                            className="w-full h-150 object-cover rounded-4xl border-4 border-base-300"
+                            className="w-full h-96 object-cover"
                         />
-                    </figure>
+                    </div>
 
-                    <div className="card-body">
-                        <h2 className="card-title text-4xl font-black mx-auto mb-10 text-success bg-accent/20 p-4 rounded-2xl">{food.food_name}</h2>
+                    <div className="bg-white rounded-3xl p-8 shadow-xl">
+                        <h1 className="text-4xl font-bold text-success mb-2">{food.food_name}</h1>
+                        <p className="text-gray-600 mb-6">Shared by {food.user_name}</p>
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 border-4 border-base-300 rounded-4xl p-4">
-                            <div className="space-y-2">
-                                <div className=" flex gap-2 text-base text-neutral">
-                                    <span className="font-bold">Quantity:</span>
-                                    <span className="text-success font-black">{food.food_quantity}</span>
+                        <div className="space-y-4 mb-8">
+                            <div className="flex items-center gap-3 p-3 bg-emerald-50 rounded-xl">
+                                <div className="w-10 h-10 bg-emerald-100 rounded-full flex items-center justify-center">
+                                    <span className="text-emerald-700 font-bold">📦</span>
                                 </div>
-                                <div className=" flex gap-2 text-base text-neutral">
-                                    <span className="font-bold">Expiry Date:</span>
-                                    <span className="text-success font-black">{new Date(food.expire_date).toLocaleDateString()}</span>
-                                </div>
-                                <div className=" flex gap-2 text-base text-neutral">
-                                    <span className="font-bold">Pickup Location:</span>
-                                    <span className="text-success font-black">{food.pickup_location}</span>
+                                <div>
+                                    <p className="text-sm text-gray-600">Quantity</p>
+                                    <p className="font-semibold text-emerald-700">{food.food_quantity}</p>
                                 </div>
                             </div>
 
-                            <div className="space-y-2">
-                                <div className=" flex gap-2 text-base text-neutral">
-                                    <span className="font-bold">Available Status:</span>
-                                    <span className={food.available_status ? 'text-success font-black' : 'text-[#75805c] font-black'}>
-                                        {food.available_status ? 'Available' : 'Not Available'}
-                                    </span>
+                            <div className="flex items-center gap-3 p-3 bg-emerald-50 rounded-xl">
+                                <div className="w-10 h-10 bg-emerald-100 rounded-full flex items-center justify-center">
+                                    <span className="text-emerald-700 font-bold">📍</span>
                                 </div>
-                                <div className=" flex gap-2 text-base text-neutral">
-                                    <span className="font-bold">Added By:</span>
-                                    <span className="text-success font-black">{food.user_name}</span>
+                                <div>
+                                    <p className="text-sm text-gray-600">Pickup Location</p>
+                                    <p className="font-semibold text-emerald-700">{food.pickup_location}</p>
                                 </div>
-                                <div className=" flex gap-2 text-base text-neutral">
-                                    <span className="font-bold">Donator Email:</span>
-                                    <span className="text-success font-black">{food.email}</span>
+                            </div>
+
+                            <div className="flex items-center gap-3 p-3 bg-emerald-50 rounded-xl">
+                                <div className="w-10 h-10 bg-emerald-100 rounded-full flex items-center justify-center">
+                                    <span className="text-emerald-700 font-bold">📅</span>
+                                </div>
+                                <div>
+                                    <p className="text-sm text-gray-600">Expires</p>
+                                    <p className="font-semibold text-emerald-700">{new Date(food.expire_date).toLocaleDateString()}</p>
                                 </div>
                             </div>
                         </div>
 
-                        {/* Donator Info */}
-                        <div className="divider"></div>
-                        <div className='border-4 border-[#75805c] rounded-4xl p-4 '>
-                            <h3 className="text-xl text-center mb-2 text-[#75805c] font-black rounded-2xl">Donator Information</h3>
-                            <div className="flex items-center space-x-3">
+                        <div className="border-t pt-6">
+                            <h3 className="text-xl font-bold text-emerald-700 mb-4">Donator Information</h3>
+                            <div className="flex items-center gap-4">
                                 <img
-                                    src={food.user_img_url || 'https://placehold.co/60x60'}
+                                    src={food.user_img_url || 'https://placehold.co/80x80'}
                                     alt={food.user_name}
-                                    className="w-20 h-20 rounded-xl object-cover border-2 border-[#75805c]"
+                                    className="w-20 h-20 rounded-full object-cover border-4 border-emerald-200"
                                 />
                                 <div>
-                                    <p className="font-semibold text-base"><span className="font-bold mr-2">Donator Name:</span><span className='font-black text-[#75805c]'>{food.user_name}</span></p>
-                                    <p className="font-semibold text-base"><span className="font-bold mr-2">Donator Email:</span>
-                                        <span className='font-black text-[#75805c]'>{food.email}</span></p>
+                                    <p className="font-semibold text-emerald-700">{food.user_name}</p>
+                                    <p className="text-gray-600 text-sm">{food.email}</p>
                                 </div>
                             </div>
-                        </div>
-
-                        {/* Additional Notes*/}
-                        <div className="divider"></div>
-                        <div className='bg-accent/20 rounded-4xl p-4 '>
-                            <h3 className="text-2xl text-success font-black text-center mb-4">Additional Notes</h3>
-                            <p className="text-base font-semibold text-center">
-                                {food.additional_notes || 'No additional notes provided.'}
-                            </p>
-                        </div>
-
-                        {/* Request Food Button */}
-                        <div className="card-actions justify-end mt-6">
-                            <button
-                                className="btn btn-info text-white text-base font-semibold px-10 rounded-3xl mx-auto"
-                                onClick={handleRequestFood}
-                                disabled={!food.available_status}
-                            >
-                                {food.available_status ? 'Request Food' : 'Not Available'}
-                            </button>
                         </div>
                     </div>
                 </div>
 
+                <div className="mt-8 bg-white rounded-3xl p-8 shadow-xl">
+                    <h3 className="text-2xl font-bold text-success mb-4">Additional Notes</h3>
+                    <p className="text-gray-700 leading-relaxed">
+                        {food.additional_notes || 'No additional notes provided by the donor.'}
+                    </p>
+                </div>
 
-                {/* Button to open modal */}
-                {user && user.email === food?.email && (
-                    <button
-                        className="btn mt-10"
-                        onClick={() => document.getElementById('food_requests_modal').showModal()}
-                    >
-                        View Food Requests
-                    </button>
-                )}
+                <div className="mt-8 flex justify-center">
+                    <div className="card-actions">
+                        {user && user.email === food?.email ? (
+                            <button
+                                className="btn btn-success text-white text-lg font-semibold px-12 py-4 rounded-2xl hover:bg-emerald-600 transition-all duration-300 shadow-lg hover:shadow-xl"
+                                onClick={() => document.getElementById('food_requests_modal').showModal()}
+                            >
+                                📋 View Food Requests
+                            </button>
+                        ) : (
+                            <button
+                                className={`btn text-white text-lg font-semibold px-12 py-4 rounded-2xl transition-all duration-300 shadow-lg hover:shadow-xl ${
+                                    hasRequested
+                                        ? 'btn-success opacity-70 cursor-not-allowed'
+                                        : food.available_status
+                                            ? 'btn-success hover:bg-emerald-600'
+                                            : 'btn-error opacity-70 cursor-not-allowed'
+                                }`}
+                                onClick={hasRequested ? null : handleRequestFood}
+                                disabled={hasRequested || !food.available_status}
+                            >
+                                {hasRequested
+                                    ? '✅ Requested'
+                                    : food.available_status
+                                        ? '🍽️ Request Food'
+                                        : '❌ Not Available'}
+                            </button>
+                        )}
+                    </div>
+                </div>
+            </div>
 
-                {/* Food Requests Modal */}
-                <dialog id="food_requests_modal" className="modal">
-                    <div className="modal-box w-11/12 max-w-7xl">
-                        <h3 className="text-4xl font-black text-center mb-4">Food Requests</h3>
-                        <div className="overflow-x-auto">
-                            <table className="table font-semibold text-base">
-                                <thead className="text-white">
-                                    <tr>
-                                        <th>Name</th>
-                                        <th>Location</th>
-                                        <th>Why Need</th>
-                                        <th>Contact</th>
-                                        <th>Status</th>
-                                        <th>Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {foodRequests && foodRequests.length > 0 ? (
-                                        foodRequests.map((request) => (
-                                            <tr key={request._id}>
-                                                <td>
-                                                    <div className="flex items-center space-x-3">
-                                                        <div className="avatar">
-                                                            <div className="mask mask-squircle w-12 h-12">
-                                                                <img
-                                                                    src={request.photoURL || 'https://placehold.co/40x40'}
-                                                                    alt={request.name}
-                                                                />
-                                                            </div>
-                                                        </div>
-                                                        <div>
-                                                            <div className="font-bold">{request.name}</div>
-                                                            <div className="text-sm opacity-50">{request.userEmail}</div>
+            <dialog id="food_requests_modal" className="modal">
+                <div className="modal-box w-11/12 max-w-7xl max-h-[80vh] overflow-hidden">
+                    <h3 className="text-3xl font-bold text-center mb-6 text-success">Food Requests</h3>
+                    <div className="overflow-y-auto max-h-[60vh]">
+                        <table className="table">
+                            <thead className="bg-emerald-600 text-white sticky top-0">
+                                <tr>
+                                    <th className="text-left">Requester</th>
+                                    <th>Location</th>
+                                    <th>Reason</th>
+                                    <th>Contact</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {foodRequests && foodRequests.length > 0 ? (
+                                    foodRequests.map((request) => (
+                                        <tr key={request._id} className="hover:bg-emerald-50">
+                                            <td>
+                                                <div className="flex items-center gap-3">
+                                                    <div className="avatar">
+                                                        <div className="w-10 h-10 rounded-full border-2 border-emerald-300">
+                                                            <img 
+                                                                src={request.photoURL || 'https://placehold.co/40x40'} 
+                                                                alt={request.name} 
+                                                                className="w-full h-full rounded-full object-cover"
+                                                            />
                                                         </div>
                                                     </div>
-                                                </td>
-                                                <td>{request.writeLocation}</td>
-                                                <td className="max-w-xs">{request.whyNeedFood}</td>
-                                                <td>{request.contactNo}</td>
-                                                <td>
-                                                    <span className={`badge ${request.requestStatus === 'accepted' ? 'badge-success' :
-                                                        request.requestStatus === 'rejected' ? 'badge-error' : 'badge-warning'
-                                                        }`}>
-                                                        {request.requestStatus}
-                                                    </span>
-                                                </td>
-                                                <td>
-                                                    {request.requestStatus === 'pending' && (
-                                                        <div className="flex space-x-2">
-                                                            <button
-                                                                className="btn bg-none btn-sm"
-                                                                onClick={() => handleAcceptRequest(request._id)}
-                                                            >
-                                                                ✔️
-                                                            </button>
-                                                            <button
-                                                                className="btn btn-sm"
-                                                                onClick={() => handleRejectRequest(request._id)}
-                                                            >
-                                                                ❌
-                                                            </button>
-                                                        </div>
-                                                    )}
-                                                </td>
-                                            </tr>
-                                        ))
-                                    ) : (
-                                        <tr>
-                                            <td colSpan="6" className="text-center py-4">
-                                                No requests for this food item yet.
+                                                    <div>
+                                                        <div className="font-semibold">{request.name}</div>
+                                                        <div className="text-sm text-gray-500">{request.userEmail}</div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td className="font-medium">{request.writeLocation}</td>
+                                            <td className="max-w-xs text-sm">{request.whyNeedFood}</td>
+                                            <td className="font-semibold">{request.contactNo}</td>
+                                            <td>
+                                                <span className={`badge ${
+                                                    request.requestStatus === 'accepted' ? 'badge-success' :
+                                                    request.requestStatus === 'rejected' ? 'badge-error' : 'badge-warning'
+                                                }`}>
+                                                    {request.requestStatus}
+                                                </span>
+                                            </td>
+                                            <td>
+                                                {request.requestStatus === 'pending' && (
+                                                    <div className="flex gap-2">
+                                                        <button 
+                                                            className="btn btn-success btn-sm text-white"
+                                                            onClick={() => handleAcceptRequest(request._id)}
+                                                        >
+                                                            Accept
+                                                        </button>
+                                                        <button 
+                                                            className="btn btn-error btn-sm text-white"
+                                                            onClick={() => handleRejectRequest(request._id)}
+                                                        >
+                                                            Reject
+                                                        </button>
+                                                    </div>
+                                                )}
                                             </td>
                                         </tr>
-                                    )}
-                                </tbody>
-                            </table>
-                        </div>
-                        <div className="modal-action">
-                            <form method="dialog">
-                                <button className="btn">Close</button>
-                            </form>
-                        </div>
+                                    ))
+                                ) : (
+                                    <tr>
+                                        <td colSpan="6" className="text-center py-8 text-gray-500">
+                                            <div className="flex flex-col items-center">
+                                                <span className="text-4xl mb-2">📭</span>
+                                                <p>No requests for this food item yet.</p>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                )}
+                            </tbody>
+                        </table>
                     </div>
-                </dialog>
-
-
-
-
-
-
-
-
-
-            </div>
+                    <div className="modal-action mt-4">
+                        <form method="dialog">
+                            <button className="btn btn-ghost">Close</button>
+                        </form>
+                    </div>
+                </div>
+            </dialog>
         </div>
     );
 };
