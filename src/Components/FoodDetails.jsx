@@ -9,13 +9,14 @@ const FoodDetails = () => {
     const { user, loading } = useContext(AuthContext);
     const [food, setFood] = useState(null);
     const [loadingFood, setLoadingFood] = useState(true);
+    const [foodRequests, setFoodRequests] = useState([]);
     const navigate = useNavigate();
 
     useEffect(() => {
-        
+        // Check if user is logged in
         if (!loading) {
-            if (!user || !user.email) { 
-                navigate('/login'); 
+            if (!user || !user.email) { // Check if user exists and has an email
+                navigate('/login'); // Redirect to login if not logged in
             } else {
                 fetchFoodDetails();
             }
@@ -26,10 +27,24 @@ const FoodDetails = () => {
         try {
             const response = await axios.get(`http://localhost:3000/foods/${id}`);
             setFood(response.data);
+            
+            // Also fetch requests for this food if user is the owner
+            if (user && user.email === response.data.email) {
+                await fetchFoodRequests(id);
+            }
         } catch (error) {
             console.error('Error fetching food details:', error);
         } finally {
             setLoadingFood(false);
+        }
+    };
+
+    const fetchFoodRequests = async (foodId) => {
+        try {
+            const response = await axios.get(`http://localhost:3000/food-requests-all/${foodId}`);
+            setFoodRequests(response.data);
+        } catch (error) {
+            console.error('Error fetching food requests:', error);
         }
     };
 
@@ -41,11 +56,10 @@ const FoodDetails = () => {
                 icon: 'warning',
                 confirmButtonText: 'OK'
             });
-            navigate('/login'); 
+            navigate('/login');
             return;
         }
 
-        
         const { value: formValues } = await Swal.fire({
             title: 'Request Food Details',
             html: `<div class="text-left">
@@ -77,10 +91,7 @@ const FoodDetails = () => {
             },
             showCancelButton: true,
             confirmButtonText: 'Request Food',
-            cancelButtonText: 'Cancel',
-            customClass: {
-                htmlContainer: 'text-left'
-            }
+            cancelButtonText: 'Cancel'
         });
 
         if (formValues) {
@@ -93,8 +104,6 @@ const FoodDetails = () => {
                     name: user.displayName || user.email.split('@')[0] || 'Anonymous',
                     photoURL: user.photoURL || ''
                 };
-
-                
                 await axios.post(`http://localhost:3000/foodRequest/${food._id}`, requestData);
                 
                 Swal.fire(
@@ -113,6 +122,55 @@ const FoodDetails = () => {
         }
     };
 
+    const handleAcceptRequest = async (requestId) => {
+        try {
+            await axios.patch(`http://localhost:3000/foodRequests/${requestId}`, {
+                requestStatus: 'accepted'
+            });
+
+            await axios.patch(`http://localhost:3000/foods/${food._id}`, {
+                available_status: false
+            });
+
+            fetchFoodDetails();
+            
+            Swal.fire(
+                'Accepted!',
+                'The request has been accepted and food marked as donated.',
+                'success'
+            );
+        } catch (error) {
+            console.error('Error accepting request:', error);
+            Swal.fire(
+                'Error!',
+                'There was an error accepting the request.',
+                'error'
+            );
+        }
+    };
+
+    const handleRejectRequest = async (requestId) => {
+        try {
+            await axios.patch(`http://localhost:3000/foodRequests/${requestId}`, {
+                requestStatus: 'rejected'
+            });
+            fetchFoodDetails();
+            
+            Swal.fire(
+                'Rejected!',
+                'The request has been rejected.',
+                'success'
+            );
+        } catch (error) {
+            console.error('Error rejecting request:', error);
+            Swal.fire(
+                'Error!',
+                'There was an error rejecting the request.',
+                'error'
+            );
+        }
+    };
+
     if (loadingFood) {
         return (
             <div className="min-h-screen bg-base-200 flex items-center justify-center">
@@ -126,7 +184,7 @@ const FoodDetails = () => {
             <div className="min-h-screen bg-base-200 flex items-center justify-center">
                 <div className="text-center">
                     <h2 className="text-2xl font-bold text-error">Food not found</h2>
-                    <button 
+                    <button
                         className="btn btn-primary mt-4"
                         onClick={() => navigate(-1)}
                     >
@@ -140,25 +198,25 @@ const FoodDetails = () => {
     return (
         <div className="min-h-screen bg-base-200 p-4 md:p-8">
             <div className="container mx-auto max-w-4xl">
-                <button 
+                <button
                     className="btn btn-ghost mb-6"
                     onClick={() => navigate(-1)}
                 >
                     ← Back
                 </button>
-                
+
                 <div className="card bg-base-100 shadow-xl">
                     <figure className="px-4 pt-4">
-                        <img 
-                            src={food.food_image || 'https://placehold.co/400x300'} 
-                            alt={food.food_name} 
+                        <img
+                            src={food.food_image || 'https://placehold.co/400x300'}
+                            alt={food.food_name}
                             className="w-full h-64 object-cover rounded-lg"
                         />
                     </figure>
-                    
+
                     <div className="card-body">
                         <h2 className="card-title text-3xl">{food.food_name}</h2>
-                        
+
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div className="space-y-2">
                                 <div className="flex justify-between">
@@ -174,7 +232,7 @@ const FoodDetails = () => {
                                     <span>{food.pickup_location}</span>
                                 </div>
                             </div>
-                            
+
                             <div className="space-y-2">
                                 <div className="flex justify-between">
                                     <span className="font-semibold">Available Status:</span>
@@ -193,14 +251,14 @@ const FoodDetails = () => {
                             </div>
                         </div>
 
-                        {/* Donator Info Section */}
+                        {/* Donator Info */}
                         <div className="divider"></div>
                         <div>
                             <h3 className="text-xl font-semibold mb-2">Donator Information</h3>
                             <div className="flex items-center space-x-4">
-                                <img 
-                                    src={food.user_img_url || 'https://placehold.co/60x60'} 
-                                    alt={food.user_name} 
+                                <img
+                                    src={food.user_img_url || 'https://placehold.co/60x60'}
+                                    alt={food.user_name}
                                     className="w-12 h-12 rounded-full object-cover"
                                 />
                                 <div>
@@ -210,7 +268,7 @@ const FoodDetails = () => {
                             </div>
                         </div>
 
-                        
+                        {/* Additional Notes*/}
                         <div className="divider"></div>
                         <div>
                             <h3 className="text-xl font-semibold mb-2">Additional Notes</h3>
@@ -219,9 +277,9 @@ const FoodDetails = () => {
                             </p>
                         </div>
 
-                        
+                        {/* Request Food Button */}
                         <div className="card-actions justify-end mt-6">
-                            <button 
+                            <button
                                 className="btn btn-primary"
                                 onClick={handleRequestFood}
                                 disabled={!food.available_status}
@@ -231,6 +289,86 @@ const FoodDetails = () => {
                         </div>
                     </div>
                 </div>
+
+                {/* Food Requests Table*/}
+                {user && user.email === food?.email && (
+                    <div className="mt-8">
+                        <h3 className="text-2xl font-semibold mb-4">Food Requests</h3>
+                        <div className="overflow-x-auto">
+                            <table className="table table-zebra w-full">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Location</th>
+                                        <th>Why Need</th>
+                                        <th>Contact</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {foodRequests && foodRequests.length > 0 ? (
+                                        foodRequests.map((request) => (
+                                            <tr key={request._id}>
+                                                <td>
+                                                    <div className="flex items-center space-x-3">
+                                                        <div className="avatar">
+                                                            <div className="mask mask-squircle w-12 h-12">
+                                                                <img 
+                                                                    src={request.photoURL || 'https://placehold.co/40x40'} 
+                                                                    alt={request.name} 
+                                                                />
+                                                            </div>
+                                                        </div>
+                                                        <div>
+                                                            <div className="font-bold">{request.name}</div>
+                                                            <div className="text-sm opacity-50">{request.userEmail}</div>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td>{request.writeLocation}</td>
+                                                <td className="max-w-xs">{request.whyNeedFood}</td>
+                                                <td>{request.contactNo}</td>
+                                                <td>
+                                                    <span className={`badge ${
+                                                        request.requestStatus === 'accepted' ? 'badge-success' :
+                                                        request.requestStatus === 'rejected' ? 'badge-error' : 'badge-warning'
+                                                    }`}>
+                                                        {request.requestStatus}
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    {request.requestStatus === 'pending' && (
+                                                        <div className="flex space-x-2">
+                                                            <button 
+                                                                className="btn btn-success btn-sm"
+                                                                onClick={() => handleAcceptRequest(request._id)}
+                                                            >
+                                                                Accept
+                                                            </button>
+                                                            <button 
+                                                                className="btn btn-error btn-sm"
+                                                                onClick={() => handleRejectRequest(request._id)}
+                                                            >
+                                                                Reject
+                                                            </button>
+                                                        </div>
+                                                    )}
+                                                </td>
+                                            </tr>
+                                        ))
+                                    ) : (
+                                        <tr>
+                                            <td colSpan="6" className="text-center py-4">
+                                                No requests for this food item yet.
+                                            </td>
+                                        </tr>
+                                    )}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                )}
             </div>
         </div>
     );

@@ -12,7 +12,7 @@ const ExtraSection = () => {
                 </h2>
             </div>
 
-            <section className="py-12 lg:py-16 bg-gradient-to-b from-base-200 to-info/20 border-4 border-base-300 rounded-3xl">
+            <section className="py-12 lg:py-16 bg-linear-to-b from-base-200 to-info/20 border-4 border-base-300 rounded-3xl">
                 <p className="text-lg sm:text-xl lg:text-2xl font-black text-success text-center max-w-4xl mx-auto mb-12 bg-accent/10 px-6 py-3 rounded-2xl">
                     Turn your extra food into someone's blessing in just 3 simple steps
                 </p>
@@ -33,10 +33,10 @@ const ExtraSection = () => {
                             </div>
                         </div>
 
-                        <h3 className="text-lg sm:text-xl font-black bg-accent/20 p-4 rounded-2xl text-success border-2 border-accent mb-3">
+                        <h3 className="text-base sm:text-lg font-black bg-accent/20 p-3 rounded-2xl text-success border-2 border-accent mb-2">
                             Share Your Extra Food
                         </h3>
-                        <p className="text-neutral leading-relaxed bg-info/10 p-5 border-2 border-info rounded-2xl text-sm sm:text-base font-semibold h-40 flex items-center justify-center">
+                        <p className="text-neutral leading-relaxed bg-info/10 p-3 border-2 border-info rounded-2xl text-xs sm:text-sm font-semibold h-32 flex items-center justify-center">
                             Have extra biryani, iftar items, or cooked meals? Just snap a photo, add details,
                             and post it in minutes. Your surplus becomes someone's suhur or dinner!
                         </p>
@@ -50,17 +50,17 @@ const ExtraSection = () => {
                                     2
                                 </div>
                             </div>
-                            <div className="absolute -top-3 -right-3 sm:-top-4 sm:-right-4">
+                            <div className="absolute -top-3 -right-3 sm:-top-4 sm:-right-2">
                                 <div className="bg-success text-white px-3 sm:px-4 py-2 rounded-full text-sm font-bold shadow-xl whitespace-nowrap">
                                     Find Food
                                 </div>
                             </div>
                         </div>
 
-                        <h3 className="text-lg sm:text-xl font-black bg-accent/20 p-4 rounded-2xl text-success border-2 border-accent mb-3">
+                        <h3 className="text-base sm:text-lg font-black bg-accent/20 p-3 rounded-2xl text-success border-2 border-accent mb-2">
                             Browse & Request
                         </h3>
-                        <p className="text-neutral leading-relaxed bg-info/10 p-5 border-2 border-info rounded-2xl text-sm sm:text-base font-semibold h-40 flex items-center justify-center">
+                        <p className="text-neutral leading-relaxed bg-info/10 p-3 border-2 border-info rounded-2xl text-xs sm:text-sm font-semibold h-32 flex items-center justify-center">
                             Hungry or know someone in need? Browse fresh donations near you.
                             Request with one tap — no money, just respect and gratitude.
                         </p>
@@ -81,10 +81,10 @@ const ExtraSection = () => {
                             </div>
                         </div>
 
-                        <h3 className="text-lg sm:text-xl font-black bg-accent/20 p-4 rounded-2xl text-success border-2 border-accent mb-3">
+                        <h3 className="text-base sm:text-lg font-black bg-accent/20 p-3 rounded-2xl text-success border-2 border-accent mb-2">
                             Pickup with Smile
                         </h3>
-                        <p className="text-neutral leading-relaxed bg-info/10 p-5 border-2 border-info rounded-2xl text-sm sm:text-base font-semibold h-40 flex items-center justify-center">
+                        <p className="text-neutral leading-relaxed bg-info/10 p-3 border-2 border-info rounded-2xl text-xs sm:text-sm font-semibold h-32 flex items-center justify-center">
                             Chat with the donor, agree on time, and collect fresh food from their location.
                             Zero waste. Full hearts. That's the magic of sharing.
                         </p>
@@ -93,7 +93,7 @@ const ExtraSection = () => {
             </section>
 
             {/* section-2: Our Mission */}
-            <section className="mt-16 lg:mt-20 py-12 lg:py-20 bg-gradient-to-b from-accent/10 to-info/10 border-4 border-base-300 rounded-3xl">
+            <section className="mt-16 lg:mt-20 py-12 lg:py-20 bg-linear-to-b from-accent/10 to-info/10 border-4 border-base-300 rounded-3xl">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
                         <div className="lg:col-span-4 flex justify-center">
