@@ -19,6 +19,8 @@ const MyFoodRequests = () => {
         try {
             const response = await fetch(`http://localhost:3000/my-all-food-requests?email=${user.email}`);
             const data = await response.json();
+            console.log(data);
+            
             setRequests(Array.isArray(data) ? data : []);
         } catch (error) {
             console.error('Error fetching user requests:', error);
@@ -101,7 +103,6 @@ const MyFoodRequests = () => {
                                     <th>Reason</th>
                                     <th>Contact</th>
                                     <th>Status</th>
-                                    <th>Date Requested</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>
@@ -146,7 +147,6 @@ const MyFoodRequests = () => {
                                                 {request.requestStatus}
                                             </span>
                                         </td>
-                                        <td>{new Date(request.createdAt || request._id?.substring(0, 8) * 1000).toLocaleDateString()}</td>
                                         <td>
                                             <div className="flex gap-2">
                                                 <button 
@@ -207,6 +207,10 @@ const MyFoodRequests = () => {
                                     <div className="flex justify-between">
                                         <span className="font-semibold">Pickup Location:</span>
                                         <span className="text-right">{selectedRequest.foodDetails?.pickup_location}</span>
+                                    </div>
+                                    <div className="flex justify-between">
+                                        <span className="font-semibold">Food Availability:</span>
+                                        <span className="text-right">{selectedRequest.foodDetails?.available_status ? 'Available' : 'Donated'}</span>
                                     </div>
                                 </div>
                             </div>

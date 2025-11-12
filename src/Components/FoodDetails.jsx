@@ -143,21 +143,22 @@ const FoodDetails = () => {
 
         if (result.isConfirmed) {
             try {
-                await axios.patch(`http://localhost:3000/foodRequests/${requestId}`, {
-                    requestStatus: 'accepted'
+                // Use the new endpoint for accepting requests
+                const response = await axios.patch(`http://localhost:3000/foodRequestAccept/${requestId}`, {
+                    userEmail: user.email
                 });
 
-                await axios.patch(`http://localhost:3000/foods/${food._id}`, {
-                    available_status: false
-                });
+                if (response.data) {
+                    fetchFoodDetails();
 
-                fetchFoodDetails();
-
-                Swal.fire({
-                    title: 'Accepted!',
-                    text: 'The request has been accepted and food marked as donated.',
-                    icon: 'success'
-                });
+                    Swal.fire({
+                        title: 'Accepted!',
+                        text: 'The request has been accepted and food marked as donated.',
+                        icon: 'success'
+                    });
+                } else {
+                    throw new Error('Failed to accept request');
+                }
             } catch (error) {
                 console.error('Error accepting request:', error);
                 Swal.fire({
@@ -183,17 +184,20 @@ const FoodDetails = () => {
 
         if (result.isConfirmed) {
             try {
-                await axios.patch(`http://localhost:3000/foodRequests/${requestId}`, {
-                    requestStatus: 'rejected'
-                });
+                // Use the new endpoint for rejecting requests
+                const response = await axios.patch(`http://localhost:3000/foodRequestReject/${requestId}`);
 
-                fetchFoodDetails();
+                if (response.data) {
+                    fetchFoodDetails();
 
-                Swal.fire({
-                    title: 'Rejected!',
-                    text: 'The request has been rejected.',
-                    icon: 'success'
-                });
+                    Swal.fire({
+                        title: 'Rejected!',
+                        text: 'The request has been rejected.',
+                        icon: 'success'
+                    });
+                } else {
+                    throw new Error('Failed to reject request');
+                }
             } catch (error) {
                 console.error('Error rejecting request:', error);
                 Swal.fire({
