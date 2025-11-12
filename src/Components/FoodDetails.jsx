@@ -13,10 +13,9 @@ const FoodDetails = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        // Check if user is logged in
         if (!loading) {
-            if (!user || !user.email) { // Check if user exists and has an email
-                navigate('/login'); // Redirect to login if not logged in
+            if (!user || !user.email) {
+                navigate('/login');
             } else {
                 fetchFoodDetails();
             }
@@ -27,8 +26,7 @@ const FoodDetails = () => {
         try {
             const response = await axios.get(`http://localhost:3000/foods/${id}`);
             setFood(response.data);
-            
-            // Also fetch requests for this food if user is the owner
+
             if (user && user.email === response.data.email) {
                 await fetchFoodRequests(id);
             }
@@ -81,12 +79,12 @@ const FoodDetails = () => {
                 const writeLocation = document.getElementById('writeLocation').value;
                 const whyNeedFood = document.getElementById('whyNeedFood').value;
                 const contactNo = document.getElementById('contactNo').value;
-                
+
                 if (!writeLocation || !whyNeedFood || !contactNo) {
                     Swal.showValidationMessage('Please fill in all required fields');
                     return false;
                 }
-                
+
                 return { writeLocation, whyNeedFood, contactNo };
             },
             showCancelButton: true,
@@ -105,7 +103,7 @@ const FoodDetails = () => {
                     photoURL: user.photoURL || ''
                 };
                 await axios.post(`http://localhost:3000/foodRequest/${food._id}`, requestData);
-                
+
                 Swal.fire(
                     'Requested!',
                     `Your request for ${food?.food_name} has been sent.`,
@@ -122,54 +120,90 @@ const FoodDetails = () => {
         }
     };
 
+ 
+
     const handleAcceptRequest = async (requestId) => {
-        try {
-            await axios.patch(`http://localhost:3000/foodRequests/${requestId}`, {
-                requestStatus: 'accepted'
-            });
+        document.getElementById('food_requests_modal')?.close();
 
-            await axios.patch(`http://localhost:3000/foods/${food._id}`, {
-                available_status: false
-            });
+        const result = await Swal.fire({
+            title: 'Confirm Accept',
+            text: "Are you sure you want to accept this request?",
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, accept it!',
+            cancelButtonText: 'Cancel',
+            reverseButtons: true
+        });
 
-            fetchFoodDetails();
-            
-            Swal.fire(
-                'Accepted!',
-                'The request has been accepted and food marked as donated.',
-                'success'
-            );
-        } catch (error) {
-            console.error('Error accepting request:', error);
-            Swal.fire(
-                'Error!',
-                'There was an error accepting the request.',
-                'error'
-            );
+        if (result.isConfirmed) {
+            try {
+                await axios.patch(`http://localhost:3000/foodRequests/${requestId}`, {
+                    requestStatus: 'accepted'
+                });
+
+                await axios.patch(`http://localhost:3000/foods/${food._id}`, {
+                    available_status: false
+                });
+
+                fetchFoodDetails();
+
+                Swal.fire({
+                    title: 'Accepted!',
+                    text: 'The request has been accepted and food marked as donated.',
+                    icon: 'success'
+                });
+            } catch (error) {
+                console.error('Error accepting request:', error);
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'There was an error accepting the request.',
+                    icon: 'error'
+                });
+            }
         }
     };
 
     const handleRejectRequest = async (requestId) => {
-        try {
-            await axios.patch(`http://localhost:3000/foodRequests/${requestId}`, {
-                requestStatus: 'rejected'
-            });
-            fetchFoodDetails();
-            
-            Swal.fire(
-                'Rejected!',
-                'The request has been rejected.',
-                'success'
-            );
-        } catch (error) {
-            console.error('Error rejecting request:', error);
-            Swal.fire(
-                'Error!',
-                'There was an error rejecting the request.',
-                'error'
-            );
+        document.getElementById('food_requests_modal')?.close();
+        const result = await Swal.fire({
+            title: 'Confirm Reject',
+            text: "Are you sure you want to reject this request?",
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, reject it!',
+            cancelButtonText: 'Cancel',
+            reverseButtons: true
+
+
+        });
+
+        if (result.isConfirmed) {
+            try {
+                await axios.patch(`http://localhost:3000/foodRequests/${requestId}`, {
+                    requestStatus: 'rejected'
+                } );
+
+                fetchFoodDetails();
+
+
+
+                Swal.fire({
+                    title: 'Rejected!',
+                    text: 'The request has been rejected.',
+                    icon: 'success'
+                });
+            } catch (error) {
+                console.error('Error rejecting request:', error);
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'There was an error rejecting the request.',
+                    icon: 'error'
+                });
+            }
         }
     };
+
+
 
     if (loadingFood) {
         return (
@@ -181,6 +215,7 @@ const FoodDetails = () => {
 
     if (!food) {
         return (
+
             <div className="min-h-screen bg-base-200 flex items-center justify-center">
                 <div className="text-center">
                     <h2 className="text-2xl font-bold text-error">Food not found</h2>
@@ -189,6 +224,7 @@ const FoodDetails = () => {
                         onClick={() => navigate(-1)}
                     >
                         Go Back
+                        
                     </button>
                 </div>
             </div>
@@ -196,83 +232,84 @@ const FoodDetails = () => {
     }
 
     return (
-        <div className="min-h-screen bg-base-200 p-4 md:p-8">
+        <div className="min-h-screen p-4 md:p-8">
             <div className="container mx-auto max-w-4xl">
                 <button
-                    className="btn btn-ghost mb-6"
+                    className="btn btn-info text-white mb-4"
                     onClick={() => navigate(-1)}
                 >
-                    ← Back
+                    ← Go Back
                 </button>
 
-                <div className="card bg-base-100 shadow-xl">
+                <div className="card bg-base-200 border-5 border-base-300 rounded-4xl shadow-xl">
                     <figure className="px-4 pt-4">
                         <img
                             src={food.food_image || 'https://placehold.co/400x300'}
                             alt={food.food_name}
-                            className="w-full h-64 object-cover rounded-lg"
+                            className="w-full h-150 object-cover rounded-4xl border-4 border-base-300"
                         />
                     </figure>
 
                     <div className="card-body">
-                        <h2 className="card-title text-3xl">{food.food_name}</h2>
+                        <h2 className="card-title text-4xl font-black mx-auto mb-10 text-success bg-accent/20 p-4 rounded-2xl">{food.food_name}</h2>
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 border-4 border-base-300 rounded-4xl p-4">
                             <div className="space-y-2">
-                                <div className="flex justify-between">
-                                    <span className="font-semibold">Quantity:</span>
-                                    <span>{food.food_quantity}</span>
+                                <div className=" flex gap-2 text-base text-neutral">
+                                    <span className="font-bold">Quantity:</span>
+                                    <span className="text-success font-black">{food.food_quantity}</span>
                                 </div>
-                                <div className="flex justify-between">
-                                    <span className="font-semibold">Expiry Date:</span>
-                                    <span>{new Date(food.expire_date).toLocaleDateString()}</span>
+                                <div className=" flex gap-2 text-base text-neutral">
+                                    <span className="font-bold">Expiry Date:</span>
+                                    <span className="text-success font-black">{new Date(food.expire_date).toLocaleDateString()}</span>
                                 </div>
-                                <div className="flex justify-between">
-                                    <span className="font-semibold">Pickup Location:</span>
-                                    <span>{food.pickup_location}</span>
+                                <div className=" flex gap-2 text-base text-neutral">
+                                    <span className="font-bold">Pickup Location:</span>
+                                    <span className="text-success font-black">{food.pickup_location}</span>
                                 </div>
                             </div>
 
                             <div className="space-y-2">
-                                <div className="flex justify-between">
-                                    <span className="font-semibold">Available Status:</span>
-                                    <span className={food.available_status ? 'text-success' : 'text-error'}>
+                                <div className=" flex gap-2 text-base text-neutral">
+                                    <span className="font-bold">Available Status:</span>
+                                    <span className={food.available_status ? 'text-success font-black' : 'text-[#75805c] font-black'}>
                                         {food.available_status ? 'Available' : 'Not Available'}
                                     </span>
                                 </div>
-                                <div className="flex justify-between">
-                                    <span className="font-semibold">Added By:</span>
-                                    <span>{food.user_name}</span>
+                                <div className=" flex gap-2 text-base text-neutral">
+                                    <span className="font-bold">Added By:</span>
+                                    <span className="text-success font-black">{food.user_name}</span>
                                 </div>
-                                <div className="flex justify-between">
-                                    <span className="font-semibold">Donator Email:</span>
-                                    <span>{food.email}</span>
+                                <div className=" flex gap-2 text-base text-neutral">
+                                    <span className="font-bold">Donator Email:</span>
+                                    <span className="text-success font-black">{food.email}</span>
                                 </div>
                             </div>
                         </div>
 
                         {/* Donator Info */}
                         <div className="divider"></div>
-                        <div>
-                            <h3 className="text-xl font-semibold mb-2">Donator Information</h3>
-                            <div className="flex items-center space-x-4">
+                        <div className='border-4 border-[#75805c] rounded-4xl p-4 '>
+                            <h3 className="text-xl text-center mb-2 text-[#75805c] font-black rounded-2xl">Donator Information</h3>
+                            <div className="flex items-center space-x-3">
                                 <img
                                     src={food.user_img_url || 'https://placehold.co/60x60'}
                                     alt={food.user_name}
-                                    className="w-12 h-12 rounded-full object-cover"
+                                    className="w-20 h-20 rounded-xl object-cover border-2 border-[#75805c]"
                                 />
                                 <div>
-                                    <p className="font-semibold">{food.user_name}</p>
-                                    <p className="text-sm text-gray-600">{food.email}</p>
+                                    <p className="font-semibold text-base"><span className="font-bold mr-2">Donator Name:</span><span className='font-black text-[#75805c]'>{food.user_name}</span></p>
+                                    <p className="font-semibold text-base"><span className="font-bold mr-2">Donator Email:</span>
+                                        <span className='font-black text-[#75805c]'>{food.email}</span></p>
                                 </div>
                             </div>
                         </div>
 
                         {/* Additional Notes*/}
                         <div className="divider"></div>
-                        <div>
-                            <h3 className="text-xl font-semibold mb-2">Additional Notes</h3>
-                            <p className="text-gray-700 bg-base-200 p-4 rounded-lg">
+                        <div className='bg-accent/20 rounded-4xl p-4 '>
+                            <h3 className="text-2xl text-success font-black text-center mb-4">Additional Notes</h3>
+                            <p className="text-base font-semibold text-center">
                                 {food.additional_notes || 'No additional notes provided.'}
                             </p>
                         </div>
@@ -280,7 +317,7 @@ const FoodDetails = () => {
                         {/* Request Food Button */}
                         <div className="card-actions justify-end mt-6">
                             <button
-                                className="btn btn-primary"
+                                className="btn btn-info text-white text-base font-semibold px-10 rounded-3xl mx-auto"
                                 onClick={handleRequestFood}
                                 disabled={!food.available_status}
                             >
@@ -290,13 +327,24 @@ const FoodDetails = () => {
                     </div>
                 </div>
 
-                {/* Food Requests Table*/}
+
+                {/* Button to open modal */}
                 {user && user.email === food?.email && (
-                    <div className="mt-8">
-                        <h3 className="text-2xl font-semibold mb-4">Food Requests</h3>
+                    <button
+                        className="btn mt-10"
+                        onClick={() => document.getElementById('food_requests_modal').showModal()}
+                    >
+                        View Food Requests
+                    </button>
+                )}
+
+                {/* Food Requests Modal */}
+                <dialog id="food_requests_modal" className="modal">
+                    <div className="modal-box w-11/12 max-w-7xl">
+                        <h3 className="text-4xl font-black text-center mb-4">Food Requests</h3>
                         <div className="overflow-x-auto">
-                            <table className="table table-zebra w-full">
-                                <thead>
+                            <table className="table font-semibold text-base">
+                                <thead className="text-white">
                                     <tr>
                                         <th>Name</th>
                                         <th>Location</th>
@@ -314,9 +362,9 @@ const FoodDetails = () => {
                                                     <div className="flex items-center space-x-3">
                                                         <div className="avatar">
                                                             <div className="mask mask-squircle w-12 h-12">
-                                                                <img 
-                                                                    src={request.photoURL || 'https://placehold.co/40x40'} 
-                                                                    alt={request.name} 
+                                                                <img
+                                                                    src={request.photoURL || 'https://placehold.co/40x40'}
+                                                                    alt={request.name}
                                                                 />
                                                             </div>
                                                         </div>
@@ -330,27 +378,26 @@ const FoodDetails = () => {
                                                 <td className="max-w-xs">{request.whyNeedFood}</td>
                                                 <td>{request.contactNo}</td>
                                                 <td>
-                                                    <span className={`badge ${
-                                                        request.requestStatus === 'accepted' ? 'badge-success' :
+                                                    <span className={`badge ${request.requestStatus === 'accepted' ? 'badge-success' :
                                                         request.requestStatus === 'rejected' ? 'badge-error' : 'badge-warning'
-                                                    }`}>
+                                                        }`}>
                                                         {request.requestStatus}
                                                     </span>
                                                 </td>
                                                 <td>
                                                     {request.requestStatus === 'pending' && (
                                                         <div className="flex space-x-2">
-                                                            <button 
-                                                                className="btn btn-success btn-sm"
+                                                            <button
+                                                                className="btn bg-none btn-sm"
                                                                 onClick={() => handleAcceptRequest(request._id)}
                                                             >
-                                                                Accept
+                                                                ✔️
                                                             </button>
-                                                            <button 
-                                                                className="btn btn-error btn-sm"
+                                                            <button
+                                                                className="btn btn-sm"
                                                                 onClick={() => handleRejectRequest(request._id)}
                                                             >
-                                                                Reject
+                                                                ❌
                                                             </button>
                                                         </div>
                                                     )}
@@ -367,8 +414,22 @@ const FoodDetails = () => {
                                 </tbody>
                             </table>
                         </div>
+                        <div className="modal-action">
+                            <form method="dialog">
+                                <button className="btn">Close</button>
+                            </form>
+                        </div>
                     </div>
-                )}
+                </dialog>
+
+
+
+
+
+
+
+
+
             </div>
         </div>
     );

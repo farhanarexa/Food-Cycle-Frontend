@@ -43,9 +43,6 @@ const FeaturedFood = () => {
             });
     }, []);
 
-    const handleViewDetails = (id) => {
-        navigate(`/foodDetails/${id}`);
-    };
 
     if (loading) {
         return (
@@ -140,12 +137,11 @@ const FeaturedFood = () => {
                                 </div>
 
                                 <div className="mt-6">
-                                    <button
-                                        onClick={() => handleViewDetails(food._id)}
-                                        className="w-full"
-                                    >
-                                        <CardButton>View Details</CardButton>
+                                    <button className="w-full">
+                                       <Link to={`/foodDetails/${food._id}`} className='flex justify-center'> <CardButton>View Details</CardButton></Link>
                                     </button>
+
+                                   
                                 </div>
                             </div>
                         </div>
