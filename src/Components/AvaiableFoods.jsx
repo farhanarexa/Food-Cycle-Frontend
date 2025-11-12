@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router';
+import { Link, useNavigate } from 'react-router';
 import CardButton from './Buttons/CardButton';
 import { IoLocationSharp } from 'react-icons/io5';
 import { MdFoodBank } from 'react-icons/md';
@@ -90,7 +90,9 @@ const AvaiableFoods = () => {
                                     className="w-full flex items-center justify-center text-sm sm:text-base"
                                     aria-label="View food details"
                                 >
-                                    <CardButton>View Details</CardButton>
+                                    <Link to={`/foodDetails/${food._id}`} className="flex items-center gap-2">
+                                       <CardButton>View Details</CardButton>
+                                    </Link>
                                 </button>
                             </div>
                         </div>
