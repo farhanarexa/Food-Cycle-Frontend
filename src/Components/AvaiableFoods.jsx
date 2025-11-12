@@ -1,12 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router';
 import CardButton from './Buttons/CardButton';
 import { IoLocationSharp } from 'react-icons/io5';
 import { MdFoodBank } from 'react-icons/md';
+import { AuthContext } from '../Contexts/AuthContext';
 
 const AvaiableFoods = () => {
     const navigate = useNavigate();
-    const isLoggedIn = false;
+    const { user, loading } = useContext(AuthContext);
 
     const [foods, setFoods] = useState([]);
 
@@ -16,13 +17,6 @@ const AvaiableFoods = () => {
             .then(data => setFoods(data));
     }, []);
 
-    const handleViewDetails = (id) => {
-        if (!isLoggedIn) {
-            navigate('/login');
-            return;
-        }
-        navigate(`/foodDetails/${id}`);
-    };
 
     return (
         <div className="px-4 sm:px-6 md:px-8 lg:px-16 xl:px-25 mx-auto">
@@ -85,15 +79,19 @@ const AvaiableFoods = () => {
                             </div>
 
                             <div className="mt-4 sm:mt-5">
-                                <button
-                                    onClick={() => handleViewDetails(food._id)}
+                                <Link 
+                                    to={user && !loading ? `/foodDetails/${food._id}` : '/login'} 
                                     className="w-full flex items-center justify-center text-sm sm:text-base"
+                                    onClick={(e) => {
+                                        if (!user || loading) {
+                                            e.preventDefault();
+                                            navigate('/login');
+                                        }
+                                    }}
                                     aria-label="View food details"
                                 >
-                                    <Link to={`/foodDetails/${food._id}`} className="flex items-center gap-2">
-                                       <CardButton>View Details</CardButton>
-                                    </Link>
-                                </button>
+                                   <CardButton>View Details</CardButton>
+                                </Link>
                             </div>
                         </div>
                     </div>
@@ -104,3 +102,13 @@ const AvaiableFoods = () => {
 };
 
 export default AvaiableFoods;
+
+
+
+
+
+
+
+
+
+

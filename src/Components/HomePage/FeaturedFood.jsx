@@ -2,8 +2,7 @@ import { IoLocationSharp } from 'react-icons/io5';
 import { MdFoodBank } from 'react-icons/md';
 import CardButton from '../Buttons/CardButton';
 import { Link, useNavigate } from 'react-router';
-import { useEffect, useState } from 'react';
-
+import { useContext, useEffect, useState } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay, Navigation, Pagination } from 'swiper/modules';
 
@@ -11,6 +10,7 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import FeaturedFoodButton from '../Buttons/FeaturedFoodButton';
+import { AuthContext } from '../../Contexts/AuthContext';
 
 const extractQuantityNumber = (quantityStr) => {
     if (!quantityStr) return 0;
@@ -20,8 +20,9 @@ const extractQuantityNumber = (quantityStr) => {
 
 const FeaturedFood = () => {
     const navigate = useNavigate();
+    const { user, loading } = useContext(AuthContext);
     const [featuredFoods, setFeaturedFoods] = useState([]);
-    const [loading, setLoading] = useState(true);
+    const [loadingFoods, setLoadingFoods] = useState(true);
 
     useEffect(() => {
         fetch('http://localhost:3000/foods')
@@ -35,16 +36,23 @@ const FeaturedFood = () => {
 
                 const top6 = sortedByQuantity.slice(0, 6);
                 setFeaturedFoods(top6);
-                setLoading(false);
+                setLoadingFoods(false);
             })
             .catch(err => {
                 console.error(err);
-                setLoading(false);
+                setLoadingFoods(false);
             });
     }, []);
 
+    const handleViewDetails = (id) => {
+        if (!user || loading) {
+            navigate('/login');
+            return;
+        }
+        navigate(`/foodDetails/${id}`);
+    };
 
-    if (loading) {
+    if (loadingFoods || loading) {
         return (
             <div className="text-center py-20">
                 <span className="loading loading-spinner loading-lg text-success"></span>
@@ -136,12 +144,14 @@ const FeaturedFood = () => {
                                     </div>
                                 </div>
 
-                                <div className="mt-6">
-                                    <button className="w-full">
-                                       <Link to={`/foodDetails/${food._id}`} className='flex justify-center'> <CardButton>View Details</CardButton></Link>
+                                <div className="mt-6 ">
+                                    <button 
+                                        className="w-full flex justify-center"
+                                        onClick={() => handleViewDetails(food._id)}
+                                       
+                                    >
+                                       <CardButton></CardButton>
                                     </button>
-
-                                   
                                 </div>
                             </div>
                         </div>
