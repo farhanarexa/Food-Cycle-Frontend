@@ -105,60 +105,59 @@ const ManageMyFoods = () => {
             try {
                 await axios.delete(`http://localhost:3000/foods/${foodId}`);
 
-
                 setFoods(foods.filter(food => food._id !== foodId));
 
                 Swal.fire(
                     'Deleted!',
                     'Your food item has been deleted.',
-                    'Success'
+                    'success'
                 );
             } catch (error) {
                 console.error('Error deleting food:', error);
                 Swal.fire(
                     'Error!',
                     'There was an error deleting the food item.',
-                    'Error'
+                    'error'
                 );
             }
         }
     };
 
     return (
-        <div className="min-h-screen  p-4 md:p-8">
+        <div className="min-h-screen p-2 sm:p-4 md:p-8">
             <div className="container mx-auto">
-                <h1 className="text-4xl md:text-4xl font-black text-center mb-8 text-success bg-accent/20 p-4 rounded-2xl">Manage My Foods</h1>
+                <h1 className="text-2xl sm:text-3xl md:text-4xl font-black text-center mb-6 sm:mb-8 text-success bg-accent/20 p-3 sm:p-4 rounded-2xl">Manage My Foods</h1>
                 {loading ? (
-                    <div className="flex justify-center items-center">
-                        <span className="loading loading-spinner loading-lg"></span>
+                    <div className="flex justify-center items-center min-h-[300px]">
+                        <span className="loading loading-spinner loading-md sm:loading-lg"></span>
                     </div>
                 ) : (
                     <div className="overflow-x-auto">
                         {Array.isArray(foods) && foods.length > 0 ? (
-                            <table className="table bg-base-200 w-full border-5 border-base-300">
+                            <table className="table bg-base-200 w-full border-2 sm:border-5 border-base-300 text-sm sm:text-base">
                                 <thead className='text-center'>
-                                    <tr className="bg-info/40 text-xl text[#575f43]">
-                                        <th className='bg-info/20'>Food Name</th>
-                                        <th className=''>Quantity</th>
-                                        <th className='bg-info/20'>Expiry Date</th>
-                                        <th className=''>Actions</th>
+                                    <tr className="bg-info/40 text-base sm:text-xl text-[#575f43]">
+                                        <th className='bg-info/20 px-2 py-3 sm:px-4'>Food Name</th>
+                                        <th className='px-2 py-3 sm:px-4'>Quantity</th>
+                                        <th className='bg-info/20 px-2 py-3 sm:px-4'>Expiry Date</th>
+                                        <th className='px-2 py-3 sm:px-4'>Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {foods.map((food) => (
                                         <tr className="hover:bg-accent/10 text-center" key={food._id}>
-                                            <td className='bg-accent/10'>{food.food_name}</td>
-                                            <td>{food.food_quantity}</td>
-                                            <td className='bg-accent/10'>{new Date(food.expire_date).toLocaleDateString()}</td>
-                                            <td>
+                                            <td className='bg-accent/10 px-2 py-3 sm:px-4'>{food.food_name}</td>
+                                            <td className='px-2 py-3 sm:px-4'>{food.food_quantity}</td>
+                                            <td className='bg-accent/10 px-2 py-3 sm:px-4'>{new Date(food.expire_date).toLocaleDateString()}</td>
+                                            <td className='px-2 py-3 sm:px-4'>
                                                 <button
-                                                    className="btn btn-info btn-sm text-white mr-2"
+                                                    className="btn btn-info btn-xs sm:btn-sm text-white mr-1 sm:mr-2"
                                                     onClick={() => handleUpdate(food)}
                                                 >
                                                     Update
                                                 </button>
                                                 <button
-                                                    className="btn btn-success text-white btn-sm"
+                                                    className="btn btn-success text-white btn-xs sm:btn-sm"
                                                     onClick={() => handleDelete(food._id)}
                                                 >
                                                     Delete
@@ -169,36 +168,35 @@ const ManageMyFoods = () => {
                                 </tbody>
                             </table>
                         ) : (
-                            <div className="text-center py-10">
-                                <p className="text-xl text-gray-600">No food items found.</p>
+                            <div className="text-center py-8 sm:py-10">
+                                <p className="text-lg sm:text-xl text-gray-600">No food items found.</p>
                             </div>
                         )}
                     </div>
                 )}
             </div>
 
-            {/* Update Modal */}
             {showModal && (
-                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-                    <div className="bg-base-100 rounded-lg w-full max-w-md p-6">
-                        <div className="flex justify-between items-center mb-4">
-                            <h2 className="text-2xl bg-accent/20 px-7 py-1 rounded-2xl text-success font-black mx-auto">Update Food Item</h2>
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-2 sm:p-4">
+                    <div className="bg-base-100 rounded-lg w-full max-w-xs sm:max-w-md p-4 sm:p-6">
+                        <div className="flex justify-between items-start mb-3 sm:mb-4">
+                            <h2 className="text-xl sm:text-2xl bg-accent/20 px-4 sm:px-7 py-1 rounded-2xl text-success font-black mx-auto">Update Food Item</h2>
                             <button
-                                className="btn btn-circle btn-ghost text-xl"
+                                className="btn btn-circle btn-ghost text-lg sm:text-xl"
                                 onClick={() => setShowModal(false)}
                             >
                                 &times;
                             </button>
                         </div>
 
-                        <form onSubmit={handleUpdateSubmit} className="space-y-4">
+                        <form onSubmit={handleUpdateSubmit} className="space-y-3 sm:space-y-4">
                             <div className="form-control">
-                                <label className="label">
-                                    <span className="label-text text-sm text-success font-semibold">Food Name</span>
+                                <label className="label p-1">
+                                    <span className="label-text text-xs sm:text-sm text-success font-semibold">Food Name</span>
                                 </label>
                                 <input
                                     type="text"
-                                    className="input border-2 border-base-300 rounded-md text-[#575f43] px-3 py-2 w-full font-bold"
+                                    className="input input-sm sm:input-md border-2 border-base-300 rounded-md text-[#575f43] font-bold"
                                     value={formData.foodName}
                                     onChange={handleFormChange}
                                     name="foodName"
@@ -207,12 +205,12 @@ const ManageMyFoods = () => {
                             </div>
 
                             <div className="form-control">
-                                <label className="label">
-                                    <span className="label-text text-sm text-success font-semibold">Quantity</span>
+                                <label className="label p-1">
+                                    <span className="label-text text-xs sm:text-sm text-success font-semibold">Quantity</span>
                                 </label>
                                 <input
                                     type="number"
-                                    className="input border-2 border-base-300 rounded-md text-[#575f43] px-3 py-2 w-full font-bold"
+                                    className="input input-sm sm:input-md border-2 border-base-300 rounded-md text-[#575f43] font-bold"
                                     value={formData.foodQuantity}
                                     onChange={handleFormChange}
                                     name="foodQuantity"
@@ -220,13 +218,13 @@ const ManageMyFoods = () => {
                                 />
                             </div>
 
-                            <div className="form-control flex flex-col">
-                                <label className="label">
-                                    <span className="label-text text-sm text-success font-semibold">Expiry Date</span>
+                            <div className="form-control">
+                                <label className="label p-1">
+                                    <span className="label-text text-xs sm:text-sm text-success font-semibold">Expiry Date</span>
                                 </label>
                                 <input
                                     type="date"
-                                    className="input border-2 border-base-300 rounded-md text-[#575f43] px-3 py-2 w-full font-bold"
+                                    className="input input-sm sm:input-md border-2 border-base-300 rounded-md text-[#575f43] font-bold"
                                     value={formData.expireDate}
                                     onChange={handleFormChange}
                                     name="expireDate"
@@ -235,12 +233,12 @@ const ManageMyFoods = () => {
                             </div>
 
                             <div className="form-control">
-                                <label className="label">
-                                    <span className="label-text text-sm text-success font-semibold">Food Image URL</span>
+                                <label className="label p-1">
+                                    <span className="label-text text-xs sm:text-sm text-success font-semibold">Food Image URL</span>
                                 </label>
                                 <input
                                     type="text"
-                                    className="input border-2 border-base-300 rounded-md text-[#575f43] px-3 py-2 w-full font-bold"
+                                    className="input input-sm sm:input-md border-2 border-base-300 rounded-md text-[#575f43] font-bold"
                                     value={formData.foodImage}
                                     onChange={handleFormChange}
                                     name="foodImage"
@@ -248,12 +246,12 @@ const ManageMyFoods = () => {
                             </div>
 
                             <div className="form-control">
-                                <label className="label">
-                                    <span className="label-text text-sm text-success font-semibold">Pickup Location</span>
+                                <label className="label p-1">
+                                    <span className="label-text text-xs sm:text-sm text-success font-semibold">Pickup Location</span>
                                 </label>
                                 <input
                                     type="text"
-                                    className="input border-2 border-base-300 rounded-md text-[#575f43] px-3 py-2 w-full font-bold"
+                                    className="input input-sm sm:input-md border-2 border-base-300 rounded-md text-[#575f43] font-bold"
                                     value={formData.pickupLocation}
                                     onChange={handleFormChange}
                                     name="pickupLocation"
@@ -261,28 +259,28 @@ const ManageMyFoods = () => {
                             </div>
 
                             <div className="form-control">
-                                <label className="label">
-                                    <span className="label-text text-sm text-success font-semibold">Additional Notes</span>
+                                <label className="label p-1">
+                                    <span className="label-text text-xs sm:text-sm text-success font-semibold">Additional Notes</span>
                                 </label>
                                 <textarea
-                                    className="textarea border-2 border-base-300 rounded-md text-[#575f43] px-3 py-2 w-full font-bold"
+                                    className="textarea textarea-sm sm:textarea-md border-2 border-base-300 rounded-md text-[#575f43] font-bold"
                                     value={formData.additionalNotes}
                                     onChange={handleFormChange}
                                     name="additionalNotes"
-                                    rows="3"
+                                    rows="2"
                                 ></textarea>
                             </div>
 
-                            <div className="modal-actions flex justify-end space-x-2 pt-4">
+                            <div className="modal-actions flex flex-col sm:flex-row justify-end space-y-2 sm:space-y-0 sm:space-x-2 pt-2 sm:pt-4">
                                 <button
                                     type="submit"
-                                    className="btn btn-info text-white"
+                                    className="btn btn-info text-white btn-sm sm:btn-md"
                                 >
                                     Update
                                 </button>
                                 <button
                                     type="button"
-                                    className="btn btn-success text-white"
+                                    className="btn btn-success text-white btn-sm sm:btn-md"
                                     onClick={() => setShowModal(false)}
                                 >
                                     Cancel
