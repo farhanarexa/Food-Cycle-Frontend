@@ -57,7 +57,7 @@ export default function AddFoods() {
         };
 
         try {
-            const response = await fetch("http://localhost:3000/foods", {
+            const response = await fetch("https://food-cycle-server-drab.vercel.app/foods", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

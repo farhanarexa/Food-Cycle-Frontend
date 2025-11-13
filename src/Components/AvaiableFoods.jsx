@@ -12,7 +12,7 @@ const AvaiableFoods = () => {
     const [foods, setFoods] = useState([]);
 
     useEffect(() => {
-        fetch('http://localhost:3000/foods')
+        fetch('https://food-cycle-server-drab.vercel.app/foods')
             .then(res => res.json())
             .then(data => setFoods(data));
     }, []);
@@ -39,7 +39,7 @@ const AvaiableFoods = () => {
                                 alt={food.food_name}
                                 className="w-full h-full rounded-xl object-cover border-4 border-base-300 group-hover:scale-105 transition-transform duration-500"
                             />
-                            
+
                         </div>
 
                         <div className="p-3 sm:p-4 text-center">
@@ -80,8 +80,8 @@ const AvaiableFoods = () => {
                             </div>
 
                             <div className="mt-4 sm:mt-5">
-                                <Link 
-                                    to={user && !loading ? `/foodDetails/${food._id}` : '/login'} 
+                                <Link
+                                    to={user && !loading ? `/foodDetails/${food._id}` : '/login'}
                                     className="w-full flex items-center justify-center text-sm sm:text-base"
                                     onClick={(e) => {
                                         if (!user || loading) {
@@ -91,7 +91,7 @@ const AvaiableFoods = () => {
                                     }}
                                     aria-label="View food details"
                                 >
-                                   <CardButton>View Details</CardButton>
+                                    <CardButton>View Details</CardButton>
                                 </Link>
                             </div>
                         </div>

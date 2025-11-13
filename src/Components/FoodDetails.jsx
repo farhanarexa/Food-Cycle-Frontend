@@ -25,7 +25,7 @@ const FoodDetails = () => {
 
     const fetchFoodDetails = async () => {
         try {
-            const response = await axios.get(`http://localhost:3000/foods/${id}`);
+            const response = await axios.get(`https://food-cycle-server-drab.vercel.app/foods/${id}`);
             setFood(response.data);
 
             if (user) {
@@ -40,7 +40,7 @@ const FoodDetails = () => {
 
     const fetchFoodRequests = async (foodId) => {
         try {
-            const response = await axios.get(`http://localhost:3000/food-requests-all/${foodId}`);
+            const response = await axios.get(`https://food-cycle-server-drab.vercel.app/food-requests-all/${foodId}`);
             setFoodRequests(response.data);
 
             const alreadyRequested = response.data.some(
@@ -108,7 +108,7 @@ const FoodDetails = () => {
                     name: user.displayName || user.email.split('@')[0] || 'Anonymous',
                     photoURL: user.photoURL || ''
                 };
-                await axios.post(`http://localhost:3000/foodRequest/${food._id}`, requestData);
+                await axios.post(`https://food-cycle-server-drab.vercel.app/foodRequest/${food._id}`, requestData);
 
                 Swal.fire(
                     'Requested!',
@@ -143,7 +143,7 @@ const FoodDetails = () => {
 
         if (result.isConfirmed) {
             try {
-                const response = await axios.patch(`http://localhost:3000/foodRequestAccept/${requestId}`, {
+                const response = await axios.patch(`https://food-cycle-server-drab.vercel.app/foodRequestAccept/${requestId}`, {
                     userEmail: user.email
                 });
 
@@ -183,7 +183,7 @@ const FoodDetails = () => {
 
         if (result.isConfirmed) {
             try {
-                const response = await axios.patch(`http://localhost:3000/foodRequestReject/${requestId}`);
+                const response = await axios.patch(`https://food-cycle-server-drab.vercel.app/foodRequestReject/${requestId}`);
 
                 if (response.data) {
                     fetchFoodDetails();
@@ -246,7 +246,7 @@ const FoodDetails = () => {
                     >
                         ← Back to Foods
                     </button>
-                    
+
                 </div>
 
                 <div className="grid bg grid-cols-1 lg:grid-cols-2 gap-8">

@@ -25,7 +25,7 @@ const FeaturedFood = () => {
     const [loadingFoods, setLoadingFoods] = useState(true);
 
     useEffect(() => {
-        fetch('http://localhost:3000/foods')
+        fetch('https://food-cycle-server-drab.vercel.app/foods')
             .then(res => res.json())
             .then(data => {
                 const availableFoods = data.filter(food => food.available_status === true);
@@ -145,12 +145,12 @@ const FeaturedFood = () => {
                                 </div>
 
                                 <div className="mt-6 ">
-                                    <button 
+                                    <button
                                         className="w-full flex justify-center"
                                         onClick={() => handleViewDetails(food._id)}
-                                       
+
                                     >
-                                       <CardButton>View Details</CardButton>
+                                        <CardButton>View Details</CardButton>
                                     </button>
                                 </div>
                             </div>

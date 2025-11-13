@@ -17,10 +17,10 @@ const MyFoodRequests = () => {
 
     const fetchUserRequests = async () => {
         try {
-            const response = await fetch(`http://localhost:3000/my-all-food-requests?email=${user.email}`);
+            const response = await fetch(`https://food-cycle-server-drab.vercel.app/my-all-food-requests?email=${user.email}`);
             const data = await response.json();
             console.log(data);
-            
+
             setRequests(Array.isArray(data) ? data : []);
         } catch (error) {
             console.error('Error fetching user requests:', error);
@@ -49,7 +49,7 @@ const MyFoodRequests = () => {
 
         if (result.isConfirmed) {
             try {
-                const response = await fetch(`http://localhost:3000/myFoodRequest/${requestId}`, {
+                const response = await fetch(`https://food-cycle-server-drab.vercel.app/myFoodRequest/${requestId}`, {
                     method: 'DELETE',
                 });
 
@@ -91,7 +91,7 @@ const MyFoodRequests = () => {
                 <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-success text-center bg-accent/20 p-4 rounded-2xl mt-10 mb-8">
                     My Food Requests
                 </h1>
-                
+
                 {requests.length > 0 ? (
                     <div className="overflow-x-auto bg-base-200 rounded-3xl shadow-xl p-6">
                         <table className="table">
@@ -140,16 +140,15 @@ const MyFoodRequests = () => {
                                         <td className="max-w-xs text-sm truncate">{request.whyNeedFood}</td>
                                         <td className="font-semibold">{request.contactNo}</td>
                                         <td>
-                                            <span className={`badge ${
-                                                request.requestStatus === 'accepted' ? 'badge-success' :
-                                                request.requestStatus === 'rejected' ? 'badge-success text-white' : 'badge-accent text-white'
-                                            }`}>
+                                            <span className={`badge ${request.requestStatus === 'accepted' ? 'badge-success' :
+                                                    request.requestStatus === 'rejected' ? 'badge-success text-white' : 'badge-accent text-white'
+                                                }`}>
                                                 {request.requestStatus}
                                             </span>
                                         </td>
                                         <td>
                                             <div className="flex gap-2">
-                                                <button 
+                                                <button
                                                     className="btn btn-info btn-sm text-white"
                                                     onClick={() => handleViewDetails(request)}
                                                 >
@@ -187,7 +186,7 @@ const MyFoodRequests = () => {
                 <dialog className="modal" open>
                     <div className="modal-box w-11/12 max-w-3xl rounded-4xl bg-base-200">
                         <h3 className="text-3xl font-black text-center text-success mb-4">Request Details</h3>
-                        
+
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div className="bg-accent/20 border-5 border-base-300 rounded-4xl p-4">
                                 <h4 className="font-black text-center text-xl mb-5 text-success">Food Information</h4>
@@ -214,7 +213,7 @@ const MyFoodRequests = () => {
                                     </div>
                                 </div>
                             </div>
-                            
+
                             <div className="bg-info/10 border-5 border-info/50 rounded-4xl p-4">
                                 <h4 className="font-black text-center text-xl mb-5 text-info">Donor Information</h4>
                                 <div className="space-y-2">
@@ -232,7 +231,7 @@ const MyFoodRequests = () => {
                                     </div>
                                 </div>
                             </div>
-                            
+
                             <div className="bg-info/10 border-5 border-info/50 rounded-4xl p-4">
                                 <h4 className="font-black text-center text-xl mb-5 text-info">Your Request Details</h4>
                                 <div className="space-y-2">
@@ -246,32 +245,31 @@ const MyFoodRequests = () => {
                                     </div>
                                     <div className="flex justify-between">
                                         <span className="font-black">Status:</span>
-                                        <span className={`badge ${
-                                            selectedRequest.requestStatus === 'accepted' ? 'badge-success' :
-                                            selectedRequest.requestStatus === 'rejected' ? 'badge-success text-white' : 'badge-accent text-white'
-                                        }`}>
+                                        <span className={`badge ${selectedRequest.requestStatus === 'accepted' ? 'badge-success' :
+                                                selectedRequest.requestStatus === 'rejected' ? 'badge-success text-white' : 'badge-accent text-white'
+                                            }`}>
                                             {selectedRequest.requestStatus}
                                         </span>
                                     </div>
                                 </div>
                             </div>
-                            
+
                             <div className="bg-accent/20 border-5 border-base-300 rounded-4xl p-4">
                                 <h4 className="font-black text-center text-xl mb-5 text-success">Your Reason</h4>
                                 <p className="text-center font-bold p-3 rounded-lg">{selectedRequest.whyNeedFood}</p>
                             </div>
                         </div>
-                        
+
                         {selectedRequest.requestStatus === 'accepted' && (
                             <div className="mt-4 p-4 bg-success/10 border-5 border-success rounded-2xl">
                                 <p className="text-success font-semibold text-center">🎉 Great news! Your request has been accepted.</p>
                                 <p className="text-center mt-2">Please contact the donor directly to arrange pickup.</p>
                             </div>
                         )}
-                        
+
                         <div className="modal-action mt-6">
                             <form method="dialog">
-                                <button 
+                                <button
                                     className="btn btn-success px-7 text-white border-none hover:opacity-90 transition-all mt-4 rounded-4xl text-base"
                                     onClick={() => setShowModal(false)}
                                 >

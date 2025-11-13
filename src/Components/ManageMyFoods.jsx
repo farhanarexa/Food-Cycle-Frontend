@@ -26,7 +26,7 @@ const ManageMyFoods = () => {
 
     const fetchUserFoods = async () => {
         try {
-            const response = await axios.get(`http://localhost:3000/my-foods?email=${user.email}`);
+            const response = await axios.get(`https://food-cycle-server-drab.vercel.app/my-foods?email=${user.email}`);
             setFoods(Array.isArray(response.data) ? response.data : []);
         } catch (error) {
             console.error('Error fetching user foods:', error);
@@ -69,7 +69,7 @@ const ManageMyFoods = () => {
                 pickup_location: formData.pickupLocation
             };
 
-            await axios.patch(`http://localhost:3000/foods/${currentFood._id}`, updatedFoodData);
+            await axios.patch(`https://food-cycle-server-drab.vercel.app/foods/${currentFood._id}`, updatedFoodData);
 
             setFoods(foods.map(food =>
                 food._id === currentFood._id ? {
@@ -103,7 +103,7 @@ const ManageMyFoods = () => {
 
         if (result.isConfirmed) {
             try {
-                await axios.delete(`http://localhost:3000/foods/${foodId}`);
+                await axios.delete(`https://food-cycle-server-drab.vercel.app/foods/${foodId}`);
 
                 setFoods(foods.filter(food => food._id !== foodId));
 
