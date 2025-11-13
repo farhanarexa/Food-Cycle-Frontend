@@ -83,13 +83,11 @@ const Navbar = () => {
                                         My Food Requests
                                     </Link>
                                 </li>
-                                <li><Link to="/login" onClick={handleLogout}>Logout</Link></li>
+                                <li><a onClick={handleLogout} className="justify-between">Logout</a></li>
                             </ul>
                         </div>
                     ) : (
-                        <Link to="/login">
-                            <NavbarButton />
-                        </Link>
+                        <NavbarButton />
                     )}
                 </div>
             </div>

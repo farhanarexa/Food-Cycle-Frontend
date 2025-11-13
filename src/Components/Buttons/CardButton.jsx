@@ -1,60 +1,48 @@
 import React from 'react';
 import { FaArrowRight } from 'react-icons/fa';
-import styled from 'styled-components';
 
-const CardButton = () => {
+const CardButton = ({ children }) => {
     return (
-        <StyledWrapper>
-            <button className="button flex items-center gap-2">
-                <div className='font-bold'>View Details</div>
-                <FaArrowRight size={22} />
-            </button>
-
-        </StyledWrapper>
+        <div 
+            className="button flex items-center gap-2 cursor-pointer px-5 py-2.5 font-semibold text-[#A47C59] border-2 border-[#A47C59] rounded-full bg-transparent transition-all duration-300 hover:scale-110 hover:shadow-[0_0px_20px_rgba(193,163,98,0.4)] relative overflow-hidden"
+            style={{
+                fontFamily: 'inherit',
+                fontSize: '16px',
+                transition: 'all 0.3s cubic-bezier(0.23, 1, 0.320, 1)'
+            }}
+        >
+            <style>{`
+                .button::before {
+                    content: '';
+                    position: absolute;
+                    inset: 0;
+                    margin: auto;
+                    width: 50px;
+                    height: 50px;
+                    border-radius: inherit;
+                    scale: 0;
+                    z-index: -1;
+                    background-color: #A47C59;
+                    transition: all 0.6s cubic-bezier(0.23, 1, 0.320, 1);
+                }
+                
+                .button:hover::before {
+                    scale: 5;
+                }
+                
+                .button:hover {
+                    color: white !important;
+                    scale: 1.1;
+                }
+                
+                .button:active {
+                    scale: 1;
+                }
+            `}</style>
+            <div className='font-bold'>{children}</div>
+            <FaArrowRight size={22} />
+        </div>
     );
 }
-
-const StyledWrapper = styled.div`
-  .button {
-    cursor: pointer;
-    position: relative;
-    padding: 10px 20px;
-    font-size: 16px;
-    color: #A47C59;
-    border: 2px solid #A47C59;
-    border-radius: 34px;
-    background-color: transparent;
-    font-weight: 600;
-    transition: all 0.3s cubic-bezier(0.23, 1, 0.320, 1);
-    overflow: hidden;
-  }
-
-  .button::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    margin: auto;
-    width: 50px;
-    height: 50px;
-    border-radius: inherit;
-    scale: 0;
-    z-index: -1;
-    background-color:#A47C59;
-    transition: all 0.6s cubic-bezier(0.23, 1, 0.320, 1);
-  }
-
-  .button:hover::before {
-    scale: 5;
-  }
-
-  .button:hover {
-    color: white;
-    scale: 1.1;
-    box-shadow: 0 0px 20px rgba(193, 163, 98,0.4);
-  }
-
-  .button:active {
-    scale: 1;
-  }`;
 
 export default CardButton;
