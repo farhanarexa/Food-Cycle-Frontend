@@ -61,7 +61,7 @@ const Navbar = () => {
                                 <div className="w-10 rounded-full">
                                     <img
                                         alt="User profile"
-                                        src={user.photoURL || "https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"} 
+                                        src={user.photoURL || "https://static.vecteezy.com/system/resources/previews/036/280/650/non_2x/default-avatar-profile-icon-social-media-user-image-gray-avatar-icon-blank-profile-silhouette-illustration-vector.jpg"} 
                                     />
                                 </div>
                             </div>
