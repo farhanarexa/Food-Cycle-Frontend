@@ -3,6 +3,7 @@ import React, { useContext } from 'react';
 import { Link, NavLink, useNavigate } from 'react-router';
 import { AuthContext } from '../../Contexts/AuthContext';
 import NavbarButton from '../Buttons/NavbarButton';
+import logo from '../../assets/logo.png';
 
 const Navbar = () => {
     const { user, signOutUser, loading } = useContext(AuthContext);
@@ -45,6 +46,7 @@ const Navbar = () => {
                             {links}
                         </ul>
                     </div>
+                    <img src={logo} alt="" className="w-10 h-10 rounded-full mr-2"/>
                     <a href="/" className="font-[fredoka] text-white text-2xl sm:text-3xl font-semibold">FoodCycle</a>
                 </div>
 
