@@ -15,12 +15,14 @@ import MyFoodRequests from './Components/MyFoodRequests.jsx';
 import PrivateRoute from './Components/LoginRegister/PrivateRoute.jsx';
 import Home from './Components/HomePage/Home.jsx';
 import FoodDetails from './Components/FoodDetails.jsx';
+import ErrorPage from './Components/ErrorPage.jsx';
 
 
 const router = createBrowserRouter([
   {
     path: "/",
     Component: Root,
+    errorElement: <ErrorPage />,
     children: [
       {
         index: true,
