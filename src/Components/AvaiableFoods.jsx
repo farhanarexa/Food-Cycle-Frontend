@@ -39,16 +39,7 @@ const AvaiableFoods = () => {
                                 alt={food.food_name}
                                 className="w-full h-full rounded-xl object-cover border-4 border-base-300 group-hover:scale-105 transition-transform duration-500"
                             />
-                            {/* Status badge */}
-                            <div className={`absolute top-2 right-2 px-3 py-1 rounded-full text-xs font-bold text-white ${
-                                food.food_quantity > 0 && new Date(food.expire_date) > new Date() 
-                                    ? 'bg-green-500' 
-                                    : 'bg-red-500'
-                            }`}>
-                                {food.food_quantity > 0 && new Date(food.expire_date) > new Date() 
-                                    ? 'Available' 
-                                    : 'Unavailable'}
-                            </div>
+                            
                         </div>
 
                         <div className="p-3 sm:p-4 text-center">
