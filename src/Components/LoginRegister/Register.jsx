@@ -4,7 +4,6 @@ import { AuthContext } from '../../Contexts/AuthContext';
 import { useNavigate } from 'react-router';
 
 const Register = () => {
-
     const { createUser, signInWithGoogle, loading } = useContext(AuthContext);
     const [error, setError] = useState('');
     const [showPassword, setShowPassword] = useState(false);
@@ -23,6 +22,20 @@ const Register = () => {
             setError('All fields are required.');
             return;
         }
+
+        const hasUpperCase = /[A-Z]/.test(password);
+        const hasLowerCase = /[a-z]/.test(password);
+        const hasMinLength = password.length >= 6;
+
+        if (!hasUpperCase || !hasLowerCase || !hasMinLength) {
+            let errorMessage = 'Password must meet the following criteria:\n';
+            if (!hasUpperCase) errorMessage += '- At least one uppercase letter\n';
+            if (!hasLowerCase) errorMessage += '- At least one lowercase letter\n';
+            if (!hasMinLength) errorMessage += '- At least 6 characters long';
+            setError(errorMessage);
+            return;
+        }
+
         try {
             await createUser(email, password);
             form.reset();
@@ -57,10 +70,12 @@ const Register = () => {
                             </p>
                         </div>
 
-                        {/* Error (only shows when needed - doesn't break layout) */}
+                        
                         {error && (
-                            <div className="alert alert-error shadow-lg mb-4">
-                                <span>{error}</span>
+                            <div className="alert alert-error text-white shadow-lg mb-4">
+                                <span>{error.split('\n').map((line, i) => (
+                                    <div key={i}>{line}</div>
+                                ))}</span>
                             </div>
                         )}
 
@@ -104,7 +119,6 @@ const Register = () => {
                                         className="input w-full pr-10"
                                         placeholder="Password"
                                         required
-                                        minLength="6"
                                     />
                                     <button
                                         type="button"
