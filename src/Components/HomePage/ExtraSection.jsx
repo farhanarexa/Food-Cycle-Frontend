@@ -4,7 +4,7 @@ import { MdFoodBank } from 'react-icons/md';
 
 const ExtraSection = () => {
     return (
-        <div className='px-4 sm:px-6 lg:px-8 xl:px-20 2xl:px-32'>
+        <div className='px-4 sm:px-6 lg:px-8 xl:px-20 2xl:px-32 mb-10'>
             {/* section-1: How It Works */}
             <div className="text-center mb-10">
                 <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-success bg-accent/20 p-4 rounded-2xl">

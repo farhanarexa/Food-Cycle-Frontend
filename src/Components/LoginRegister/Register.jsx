@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { FaGoogle } from 'react-icons/fa';
+import { FaGoogle, FaEye, FaEyeSlash } from 'react-icons/fa';
 import { AuthContext } from '../../Contexts/AuthContext';
 import { useNavigate } from 'react-router';
 
@@ -7,6 +7,7 @@ const Register = () => {
 
     const { createUser, signInWithGoogle, loading } = useContext(AuthContext);
     const [error, setError] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
     const navigate = useNavigate();
 
     const handleRegister = async (event) => {
@@ -44,7 +45,7 @@ const Register = () => {
     return (
         <div className="hero bg-base-100 min-h-screen">
             <div className="hero-content flex-col lg:flex-row-reverse">
-                <div className="card bg-base-200 w-full shrink-0 shadow-2xl px-5 py-10 m-20 rounded-4xl">
+                <div className="card bg-base-200 w-full shrink-0 shadow-2xl px-5 py-10 m-20 rounded-4xl border-7 border-base-300">
                     <div className="card-body">
                         <div className="text-center">
                             <h1 className="text-4xl text-success font-black">Register Now!</h1>
@@ -96,14 +97,23 @@ const Register = () => {
 
                                 {/* password */}
                                 <label className="label mt-4 text-base font-semibold text-neutral">Password</label>
-                                <input
-                                    type="password"
-                                    name='password'
-                                    className="input w-full"
-                                    placeholder="Password"
-                                    required
-                                    minLength="6"
-                                />
+                                <div className="relative">
+                                    <input
+                                        type={showPassword ? "text" : "password"}
+                                        name='password'
+                                        className="input w-full pr-10"
+                                        placeholder="Password"
+                                        required
+                                        minLength="6"
+                                    />
+                                    <button
+                                        type="button"
+                                        className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                                        onClick={() => setShowPassword(!showPassword)}
+                                    >
+                                        {showPassword ? <FaEyeSlash size={20} /> : <FaEye size={20} />}
+                                    </button>
+                                </div>
 
                                 <button
                                     type="submit"
