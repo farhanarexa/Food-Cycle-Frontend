@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { AuthContext } from './AuthContext';
-import { createUserWithEmailAndPassword, GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup, signOut } from 'firebase/auth';
+import { createUserWithEmailAndPassword, GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup, signOut, updateProfile } from 'firebase/auth';
 import { auth } from '../Firebase/firebase.init';
 
 const googleProvider = new GoogleAuthProvider();
@@ -12,6 +12,16 @@ const AuthProvider = ({ children }) => {
 
     const createUser = (email, password) => {
         return createUserWithEmailAndPassword(auth, email, password);
+    };
+
+    const updateUserProfile = (displayName, photoURL) => {
+        if (auth.currentUser) {
+            return updateProfile(auth.currentUser, {
+                displayName: displayName,
+                photoURL: photoURL
+            });
+        }
+        return Promise.reject(new Error('No authenticated user found'));
     };
 
     const signInUser = (email, password) => {
@@ -38,6 +48,7 @@ const AuthProvider = ({ children }) => {
         user,
         loading,
         createUser,
+        updateUserProfile,
         signInUser,
         signInWithGoogle,
         signOutUser,

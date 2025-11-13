@@ -4,7 +4,7 @@ import { AuthContext } from '../../Contexts/AuthContext';
 import { useNavigate } from 'react-router';
 
 const Register = () => {
-    const { createUser, signInWithGoogle, loading } = useContext(AuthContext);
+    const { createUser, updateUserProfile, signInWithGoogle, loading } = useContext(AuthContext);
     const [error, setError] = useState('');
     const [showPassword, setShowPassword] = useState(false);
     const navigate = useNavigate();
@@ -16,7 +16,6 @@ const Register = () => {
         const email = form.email.value;
         const imgUrl = form.imgUrl.value;
         const password = form.password.value;
-        console.log(name, email, imgUrl, password);
 
         if (!name || !email || !password) {
             setError('All fields are required.');
@@ -38,6 +37,9 @@ const Register = () => {
 
         try {
             await createUser(email, password);
+            
+            await updateUserProfile(name, imgUrl || null);
+            
             form.reset();
             navigate('/');
         } catch (err) {
