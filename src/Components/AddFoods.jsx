@@ -2,9 +2,9 @@
 import { useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "../Firebase/firebase.init";
-import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { PiHandHeartFill } from "react-icons/pi";
+import Swal from 'sweetalert2';
 
 
 export default function AddFoods() {
@@ -30,19 +30,17 @@ export default function AddFoods() {
         const imageUrl = form.foodImage.value;
 
         if (!imageUrl) {
-            toast.error("Please add a food image URL");
+            Swal.fire({
+                title: 'Error!',
+                text: 'Please add a food image URL',
+                icon: 'error',
+                confirmButtonText: 'OK',
+                confirmButtonColor: '#dc3545',
+            });
             setImageUploading(false);
             return;
         }
 
-        const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.bmp', '.svg'];
-        const isImageUrl = imageExtensions.some(ext => imageUrl.toLowerCase().includes(ext));
-
-        if (!isImageUrl) {
-            toast.error("Please provide a valid image URL (jpg, png, webp, etc.)");
-            setImageUploading(false);
-            return;
-        }
 
         const foodInfo = {
             food_name: foodName,
@@ -73,11 +71,23 @@ export default function AddFoods() {
                 throw new Error(result.error || "Failed to add food");
             }
 
-            toast.success("Food donated successfully! Thank you so much ❤️");
+            Swal.fire({
+                title: 'Success!',
+                text: 'Food donated successfully! Thank you so much ❤️',
+                icon: 'success',
+                confirmButtonText: 'Great!',
+                confirmButtonColor: '#28a745',
+            });
             form.reset();
         } catch (error) {
             console.error("Error:", error);
-            toast.error(error.message || "Failed to donate food. Try again.");
+            Swal.fire({
+                title: 'Error!',
+                text: error.message || "Failed to donate food. Try again.",
+                icon: 'error',
+                confirmButtonText: 'OK',
+                confirmButtonColor: '#dc3545',
+            });
         } finally {
             setImageUploading(false);
         }
