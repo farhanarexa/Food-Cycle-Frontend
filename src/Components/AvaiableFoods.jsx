@@ -33,12 +33,22 @@ const AvaiableFoods = () => {
                         key={food._id}
                         className="bg-base-200 rounded-2xl shadow-lg shadow-base-300 overflow-hidden border-10 border-base-300 transition-all duration-300 hover:shadow-2xl hover:-translate-y-3 w-full max-w-sm group"
                     >
-                        <div className="h-50 w-full sm:h-56 md:h-64 lg:h-70 px-2 sm:px-3 py-2 sm:py-3">
+                        <div className="h-50 w-full sm:h-56 md:h-64 lg:h-70 px-2 sm:px-3 py-2 sm:py-3 relative">
                             <img
                                 src={food.food_image}
                                 alt={food.food_name}
                                 className="w-full h-full rounded-xl object-cover border-4 border-base-300 group-hover:scale-105 transition-transform duration-500"
                             />
+                            {/* Status badge */}
+                            <div className={`absolute top-2 right-2 px-3 py-1 rounded-full text-xs font-bold text-white ${
+                                food.food_quantity > 0 && new Date(food.expire_date) > new Date() 
+                                    ? 'bg-green-500' 
+                                    : 'bg-red-500'
+                            }`}>
+                                {food.food_quantity > 0 && new Date(food.expire_date) > new Date() 
+                                    ? 'Available' 
+                                    : 'Unavailable'}
+                            </div>
                         </div>
 
                         <div className="p-3 sm:p-4 text-center">

@@ -150,7 +150,7 @@ const FeaturedFood = () => {
                                         onClick={() => handleViewDetails(food._id)}
                                        
                                     >
-                                       <CardButton></CardButton>
+                                       <CardButton>View Details</CardButton>
                                     </button>
                                 </div>
                             </div>

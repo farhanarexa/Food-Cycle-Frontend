@@ -246,22 +246,26 @@ const FoodDetails = () => {
                     >
                         ← Back to Foods
                     </button>
-                    <div className="text-sm text-success">
-                        {food.available_status ? (
-                            <span className="badge badge-info text-white px-3 py-2">Available</span>
-                        ) : (
-                            <span className="badge badge-success text-white px-3 py-2">Donated</span>
-                        )}
-                    </div>
+                    
                 </div>
 
                 <div className="grid bg grid-cols-1 lg:grid-cols-2 gap-8">
-                    <div className="rounded-3xl bg-base-200 overflow-hidden shadow-2xl border-5 border-base-300">
+                    <div className="rounded-3xl bg-base-200 overflow-hidden shadow-2xl border-5 border-base-300 relative">
                         <img
                             src={food.food_image || 'https://placehold.co/600x400'}
                             alt={food.food_name}
                             className="w-full p-2 rounded-3xl h-96 object-cover"
                         />
+                        {/* Status badge */}
+                        <div className={`absolute top-4 right-4 px-4 py-1.5 rounded-full text-sm font-bold text-white}`}>
+                            <div className="text-sm text-success">
+                                {food.available_status ? (
+                                    <span className="badge badge-info text-white px-3 py-2">Available</span>
+                                ) : (
+                                    <span className="badge badge-success text-white px-3 py-2">Donated</span>
+                                )}
+                            </div>
+                        </div>
                         <div className="pt-4 m-2 bg-info/10 border-3 border-info/50 rounded-3xl p-4">
                             <h3 className="text-2xl text-center font-black text-[#75805c] mb-5">Donator Information</h3>
                             <div className="flex items-center gap-4">
@@ -332,15 +336,15 @@ const FoodDetails = () => {
                                 className="btn btn-success text-white text-lg font-semibold px-12 py-4 rounded-2xl hover:bg-accent transition-all duration-300 shadow-lg hover:shadow-xl"
                                 onClick={() => document.getElementById('food_requests_modal').showModal()}
                             >
-                                 View Food Requests
+                                View Food Requests
                             </button>
                         ) : (
                             <button
                                 className={`btn text-white text-lg font-semibold px-12 py-4 rounded-4xl transition-all duration-300 shadow-lg hover:shadow-xl ${hasRequested
-                                        ? 'btn-success opacity-70 cursor-not-allowed'
-                                        : food.available_status
-                                            ? 'btn-success hover:bg-accent'
-                                            : 'btn-error opacity-70 cursor-not-allowed'
+                                    ? 'btn-success opacity-70 cursor-not-allowed'
+                                    : food.available_status
+                                        ? 'btn-success hover:bg-accent'
+                                        : 'btn-error opacity-70 cursor-not-allowed'
                                     }`}
                                 onClick={hasRequested ? null : handleRequestFood}
                                 disabled={hasRequested || !food.available_status}
@@ -397,7 +401,7 @@ const FoodDetails = () => {
                                             <td className="font-semibold">{request.contactNo}</td>
                                             <td>
                                                 <span className={`badge ${request.requestStatus === 'accepted' ? 'badge-success' :
-                                                        request.requestStatus === 'rejected' ? 'badge-info text-white' : 'badge-accent text-white'
+                                                    request.requestStatus === 'rejected' ? 'badge-info text-white' : 'badge-accent text-white'
                                                     }`}>
                                                     {request.requestStatus}
                                                 </span>
